@@ -1,3 +1,4 @@
 -Mi nombre es Camila Dossman y aparte de ser desarrolladora, durante este ciclo seré la Scrum Master del equipo.
 -Mi nombre es Valentina Forero Conde, soy desarrolladora en el equipo ProTic 2.0 y la administradora de la Base de datos
 -Mi nombre es Raul Florez Meza, este ciclo seré  desarrollador en el equipo ProTic 2.0
+-Mi nombre es Carlos Espinosa, soy desarrollador en el equipo ProTic 2.0 y sere el Product Owner del proyecto.

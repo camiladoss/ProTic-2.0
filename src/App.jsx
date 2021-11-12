@@ -7,6 +7,8 @@ import Index from 'pages/Index'
 import Layout from 'Layouts/PublicLayout'
 import Home from 'pages/Home'
 import PrivateLayout from 'Layouts/PrivateLayout'
+import GestionProyectos from "pages/GestionProyectos";
+import CrearProyectos from "pages/CrearProyectos";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         </Route>
         <Route  path="/" element={<PrivateLayout/>}>
           <Route path="/home" element={<Home/>} />
+          <Route path="/GestionProyectos" element={<GestionProyectos/>} />
+          <Route path="/CrearProyectos" element={<CrearProyectos/>} />
         </Route>
 
       </Routes>     

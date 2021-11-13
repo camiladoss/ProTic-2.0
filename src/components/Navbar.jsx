@@ -8,13 +8,13 @@ const Navbar = () => {
     setActive(!active);
     };
     return (
-        <nav className='flex items-center flex-wrap p-3 backgroundNavBar '>
+        <nav className='flex items-center flex-wrap p-3 bg-indigoDye  '>
             <a href='#!' className='inline-flex items-center p-2 mr-4 '>
                 <span className='text-xl text-white font-bold tracking-wide'>
                     ProTic 2.0
                 </span>
             </a>
-            <button className=' inline-flex p-3 rounded lg:hidden text-white ml-auto hover:text-white outline-none buttonsNavBar'
+            <button className=' inline-flex p-3 rounded lg:hidden text-white ml-auto outline-none hover:bg-carolinaBlue '
             onClick={handleClick}
             >
                 <svg

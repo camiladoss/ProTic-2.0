@@ -6,7 +6,7 @@ const PrivateLayout = () => {
     return (
         <div>
             <Navbar />
-            <Outlet />
+            <Outlet className="w-full"/>
         </div>
     )
 }

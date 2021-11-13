@@ -3,7 +3,12 @@ import React from 'react'
 const CrearAvances = () => {
     return (
         <div>
-            crear avances
+        <form>
+            <label>holi</label>
+            <input type="text"></input>
+            <button>boton</button>
+        </form>
+            
         </div>
     )
 }

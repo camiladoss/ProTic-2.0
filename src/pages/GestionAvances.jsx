@@ -29,7 +29,7 @@ const GestionAvances = () => {
             <td className="px-6 py-4 text-md text-gray-600">Se investigan las señales</td>
             <td className="px-6 py-4 text-md text-gray-600">12-11-2021</td>
             <td className="px-6 py-4 text-md text-gray-600">
-              <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-plus"></button>
+                <Link className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-plus" to="/Historial"></Link>
             </td>
           </tr>
           <tr className="whitespace-nowrap">
@@ -37,7 +37,7 @@ const GestionAvances = () => {
             <td className="px-6 py-4 text-md text-gray-600">Camila Dossman</td>
             <td className="px-6 py-4 text-md text-gray-600">543245</td>
             <td className="px-6 py-4 text-md text-gray-600">
-                <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-plus"></button>
+                <Link className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-plus" to="/Historial"></Link>
             </td>
           </tr>
         </tbody>

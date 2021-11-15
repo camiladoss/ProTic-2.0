@@ -29,8 +29,8 @@ const GestionProyectos = () => {
             <td className="px-6 py-4 text-md text-gray-600">Valentina Forero</td>
             <td className="px-6 py-4 text-md text-gray-600">123456</td>
             <td className="px-6 py-4 text-md text-gray-600">
-              <button className="px-4 py-1 text-md mr-2 text-white bg-red-400 rounded">Editar</button>
-              <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded">Inscripciones</button>
+              <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"></button>
+              <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus"></button>
             </td>
           </tr>
           <tr className="whitespace-nowrap">
@@ -38,8 +38,8 @@ const GestionProyectos = () => {
             <td className="px-6 py-4 text-md text-gray-600">Camila Dossman</td>
             <td className="px-6 py-4 text-md text-gray-600">543245</td>
             <td className="px-6 py-4 text-md text-gray-600">
-              <button className="px-4 py-1 text-md mr-2 text-white bg-red-400 rounded">Editar</button>
-              <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded">Inscripciones</button>
+              <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"></button>
+              <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus"></button>
             </td>
           </tr>
         </tbody>

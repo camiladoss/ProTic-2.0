@@ -10,6 +10,7 @@ import PrivateLayout from 'Layouts/PrivateLayout'
 import GestionProyectos from "pages/GestionProyectos";
 import CrearProyectos from "pages/CrearProyectos";
 import CrearAvances from "pages/CrearAvances";
+import Perfil from "pages/Perfil";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/GestionProyectos" element={<GestionProyectos/>} />
           <Route path="/CrearProyectos" element={<CrearProyectos/>} />
           <Route path="/CrearAvances" element={<CrearAvances/>} />
+          <Route path="/Perfil" element={<Perfil/>} />
         </Route>
 
       </Routes>     

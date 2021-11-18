@@ -59,12 +59,12 @@ const CrearProyectos = () => {
 
             <div className="w-full md:mb-0 flex flex-col">
               <label className="text-gray-700 text-md font-bold">Fecha de inicio:</label>
-              <input type="date" placeholder="Fecha de inicio" required />
+              <input type="date" placeholder="Fecha de inicio" value="2021-11-17" disabled  />
             </div>
 
             <div className="w-full md:mb-0 flex flex-col">
               <label className="text-gray-700 text-md font-bold">Fecha de terminación:</label>
-              <input type="date" placeholder="Fecha de terminación" required />
+              <input type="date" placeholder="Fecha de terminación" value="2021-11-17"  disabled />
             </div>
 
             <div className="w-full md:mb-0 flex flex-col">

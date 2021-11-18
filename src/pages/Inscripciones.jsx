@@ -68,14 +68,14 @@ const Inscripciones = () => {
             <label className="text-gray-700 text-md font-bold">
               Fecha de ingreso:
             </label>
-            <input type="date" placeholder="Fecha de ingreso"  />
+            <input type="date" placeholder="Fecha de ingreso" value="2021-11-17"   />
           </div>
 
           <div className="w-full md:mb-0 flex flex-col">
             <label className="text-gray-700 text-md font-bold">
               Fecha de egreso:
             </label>
-            <input type="date" placeholder="Fecha de Egreso"  />
+            <input type="date" placeholder="Fecha de Egreso " value="2021-11-17"   />
           </div>
 
           <div className="w-full  mb-6 md:mb-0">

@@ -11,6 +11,8 @@ import GestionProyectos from "pages/GestionProyectos";
 import CrearProyectos from "pages/CrearProyectos";
 import CrearAvances from "pages/CrearAvances";
 import Inscripciones from "pages/Inscripciones";
+import GestionAvances from "pages/GestionAvances";
+import HistorialAvances from "pages/HistorialAvances";
 
 function App() {
   return (
@@ -23,8 +25,10 @@ function App() {
           <Route path="/home" element={<Home/>} />
           <Route path="/GestionProyectos" element={<GestionProyectos/>} />
           <Route path="/CrearProyectos" element={<CrearProyectos/>} />
+          <Route path="/GestionAvances" element={<GestionAvances/>} />
           <Route path="/CrearAvances" element={<CrearAvances/>} />
           <Route path="/Inscripciones" element={<Inscripciones/>} />
+          <Route path="/Historial" element={<HistorialAvances/>} />
         </Route>
 
       </Routes>     

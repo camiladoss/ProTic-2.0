@@ -10,15 +10,16 @@ import PrivateLayout from 'Layouts/PrivateLayout'
 import GestionProyectos from "pages/GestionProyectos";
 import CrearProyectos from "pages/CrearProyectos";
 import CrearAvances from "pages/CrearAvances";
-import Inscripciones from "pages/Inscripciones";
 import GestionAvances from "pages/GestionAvances";
+import Inscripciones from "pages/Inscripciones";
 import HistorialAvances from "pages/HistorialAvances";
 import Perfil from "pages/Perfil";
+
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes> 
+      <Routes>
         <Route  path="/" element={<Layout/>}>
           <Route path="/" element={<Index/>} />
         </Route>
@@ -31,9 +32,9 @@ function App() {
           <Route path="/Inscripciones" element={<Inscripciones/>} />
           <Route path="/Historial" element={<HistorialAvances/>} />
           <Route path="/Perfil" element={<Perfil/>} />
+          <Route path="/GestionAvances" element={<GestionAvances/>} />
         </Route>
-
-      </Routes>     
+      </Routes>
   </BrowserRouter>
   );
 }

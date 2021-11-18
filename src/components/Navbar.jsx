@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 
 const Navbar = () => {
     const [active, setActive] = useState(false);
@@ -38,19 +40,23 @@ const Navbar = () => {
             }   w-full lg:inline-flex lg:flex-grow lg:w-auto`}
             >
                 <div className='lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto'>
-                    <a href='#!'  className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white '>
-                        Perfil
-                    </a>
-                    <a href='#!'  className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white'>
-                        Proyectos
-                    </a>
-                    <a href='#!'  className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white'>
-                        Inscripciones
-                    </a>
+                   
 
-                    <a href='#!'  className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white'>
-                        Usuarios
-                    </a>
+                    <Link activeClassName='active' className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white '  to='Home'>                       
+                        Inicio
+                    </Link>
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Perfil'>                       
+                        Perfil
+                    </Link>
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Inscripciones'>                       
+                        Inscripciones
+                    </Link>
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='CrearProyectos'>                       
+                        Crear Proyecto
+                    </Link>
+
+
+                    
                 </div>
             </div>
       </nav>

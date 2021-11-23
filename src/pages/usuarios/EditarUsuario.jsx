@@ -1,21 +1,24 @@
 import React,{useEffect} from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_USUARIO } from 'graphql/usuarios/queries'
 import { toast } from 'react-toastify';
-import useFormData from 'hooks/useFormData';
+// import useFormData from 'hooks/useFormData';
 import { EDITAR_USUARIO } from 'graphql/usuarios/mutations';
+import { useForm } from "react-hook-form";
 
 const EditarUsuario = () => {
 
-    const{form, formData, updateFormData} = useFormData(null);
+    const navigate = useNavigate ();
+    const { register, formState: { errors }, handleSubmit } = useForm();
 
+    // const{form, formData, updateFormData} = useFormData(null);
     const { _id } = useParams();
     const {data:queryData,error:queryError,loading:queryLoading} = useQuery(GET_USUARIO,{
         variables:{_id}
     });
 
-    const [editarUsuario, { data: mutationData, loading: mutationLoading, error: mutationError }] =
+    const [editarUsuario, {error: mutationError }] =
     useMutation(EDITAR_USUARIO);
 
     useEffect(() => {
@@ -23,20 +26,35 @@ const EditarUsuario = () => {
     }, [queryData]);
 
     useEffect(() => {
-        if(queryError)
-        toast.error('Error consultado usuarios')
-    }, [queryError]);
+        if(queryError){
+            toast.error('Error consultado usuarios')
+        }
+        if(mutationError){
+            toast.error('Error modificado el usuario')
+        }
+    }, [queryError, mutationError]);
 
-    const submitForm= (e) => {
-        e.preventDefault();
+    // const submitForm= (e) => {
+    //     e.preventDefault();
+    //     console.log(formData);
+    //     editarUsuario({
+    //         variables:{_id, ...formData}
+    //     })
+    // };
+    const onSubmit = data =>{
+        console.log(data);
         editarUsuario({
-            variables:{_id, ...formData}
-        })
-    };
+              variables:{_id, ...data}
+        });
+        toast.success('Usuario modificado con exito');
+        navigate("/Usuarios");
+    }
 
-    useEffect(() => {
-        console.log("Mutacion edicion", mutationData);
-    }, [mutationData]);
+    // useEffect(() => {
+    //     if(mutationData){
+    //         toast.success('Usuario modificado con exito')
+    //     }
+    // }, [mutationData]);
 
     if (queryLoading) { return <div>Cargando...</div>; }
     return (
@@ -47,9 +65,10 @@ const EditarUsuario = () => {
             <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Editar Usuario</h2>
             <form
             className="w-full items-center"
-            onSubmit={submitForm}
-            onChange={updateFormData}
-            ref={form}>
+            onSubmit={handleSubmit(onSubmit)}
+            // onChange={updateFormData}
+            // ref={form}
+            >
                 <div className="grid grid-cols-1 gap-y-5 gap-x-10 mx-3 mb-6 md:grid-cols-2 items-center">
                     <div className="w-full md:mb-0 flex flex-col ">
                         <label
@@ -63,7 +82,19 @@ const EditarUsuario = () => {
                             defaultValue={queryData.Usuario.nombre}
                             type="text"
                             name="nombre"
+                            {...register("nombre",{
+                                required: {
+                                    value:true,
+                                    massage: "El campo es requerido"
+                                },
+                                pattern: {
+                                    value: /^[A-Za-z]+$/i ,
+                                    massage: "El valor no es correcto",
+                                }
+                            })}
                         />
+                         {errors.nombre?.type === 'required' && <span className="text-red-600">"El nombre es requerido!"</span>}
+                         {errors.nombre?.type === 'pattern' && <span className="text-red-600">"El nombre solo puede llevar letras!"</span>}
                     </div>
                     <div className="w-full md:mb-0 flex flex-col ">
                         <label
@@ -77,7 +108,19 @@ const EditarUsuario = () => {
                             defaultValue={queryData.Usuario.apellido}
                             type="text"
                             name="apellido"
+                            {...register("apellido",{
+                                required: {
+                                    value:true,
+                                    massage: "El campo es requerido"
+                                },
+                                pattern: {
+                                    value: /^[A-Za-z]+$/i ,
+                                    massage: "El valor no es correcto",
+                                }
+                            })}
                         />
+                        {errors.apellido?.type === 'required' && <span className="text-red-600">"El apellido es requerido!"</span>}
+                        {errors.apellido?.type === 'pattern' && <span className="text-red-600">"El apellido solo puede llevar letras!"</span>}
                     </div>
                     <div className="w-full md:mb-0 flex flex-col">
                         <label
@@ -106,7 +149,19 @@ const EditarUsuario = () => {
                             defaultValue={queryData.Usuario.correo}
                             type="text"
                             name="correo"
+                            {...register("correo",{
+                                required: {
+                                    value:true,
+                                    massage: "El campo es requerido"
+                                },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i ,
+                                    massage: "El valor no es correcto",
+                                }
+                            })}
                         />
+                        {errors.correo?.type === 'required' && <span className="text-red-600">"El correo es requerido!"</span>}
+                        {errors.correo?.type === 'pattern' && <span className="text-red-600">"El correo tiene un formato erroneo!"</span>}
                     </div>
                     <div className="w-full md:mb-0 flex flex-col ">
                         <label
@@ -120,7 +175,19 @@ const EditarUsuario = () => {
                             defaultValue={queryData.Usuario.identificacion}
                             type="text"
                             name="identificacion"
+                            {...register("identificacion",{
+                                required: {
+                                    value:true,
+                                    massage: "El campo es requerido"
+                                },
+                                pattern: {
+                                    value: /^\d{4,10}$/i ,
+                                    massage: "El valor no es correcto",
+                                }
+                            })}
                         />
+                        {errors.identificacion?.type === 'required' && <span className="text-red-600">"La identificacion es requerida!"</span>}
+                        {errors.identificacion?.type === 'pattern' && <span className="text-red-600">"La identifiacion solo puede llevar numeros!"</span>}
                     </div>
                     <div className="w-full mb-6 md:mb-0" >
                         <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>
@@ -130,6 +197,16 @@ const EditarUsuario = () => {
                             id="grid-rol"
                             defaultValue={queryData.Usuario.rol}
                             name="rol"
+                            {...register("rol",{
+                                required: {
+                                    value:true,
+                                    massage: "El campo es requerido"
+                                },
+                                pattern: {
+                                    value: /^[A-Za-z]+$/i,
+                                    massage: "El valor no es correcto",
+                                }
+                            })}
                             >
                                 <option>ESTUDIANTE</option>
                                 <option>LIDER</option>
@@ -145,6 +222,8 @@ const EditarUsuario = () => {
                                 </svg>
                             </div>
                         </div>
+                        {errors.rol?.type === 'required' && <span className="text-red-600">"El rol es requerido!"</span>}
+                        {errors.rol?.type === 'pattern' && <span className="text-red-600">"El rol no esta disponible!"</span>}
                     </div>
                     <div className="w-full mb-6 md:mb-0" >
                         <label className="text-gray-700 text-md font-bold" htmlFor="grid-estado">Estado:</label>
@@ -154,6 +233,16 @@ const EditarUsuario = () => {
                             id="grid-estado"
                             defaultValue={queryData.Usuario.estado}
                             name="estado"
+                            {...register("estado",{
+                                required: {
+                                    value:true,
+                                    massage: "El campo es requerido"
+                                },
+                                pattern: {
+                                    value: /^[A-Za-z]+$/i,
+                                    massage: "El valor no es correcto",
+                                }
+                            })}
                             >
                                 <option>AUTORIZADO</option>
                                 <option>PENDIENTE</option>
@@ -169,6 +258,8 @@ const EditarUsuario = () => {
                                 </svg>
                             </div>
                         </div>
+                        {errors.estado?.type === 'required' && <span className="text-red-600">"La estado es requerido!"</span>}
+                        {errors.estado?.type === 'pattern' && <span className="text-red-600">"El estado no esta disponible!"</span>}
                     </div>
                     <div className="md:col-start-1 md:col-end-3 flex justify-center">
                         <button

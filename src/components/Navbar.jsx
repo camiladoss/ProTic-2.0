@@ -2,7 +2,6 @@ import React from 'react'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-
 const Navbar = () => {
     const [active, setActive] = useState(false);
 
@@ -11,7 +10,7 @@ const Navbar = () => {
     };
     return (
         <nav className='flex items-center flex-wrap p-3 bg-indigoDye  '>
-            <a href='#!' className='inline-flex items-center p-2 mr-4 '>
+            <a href='/' className='inline-flex items-center p-2 mr-4 '>
                 <span className='text-xl text-white font-bold tracking-wide'>
                     ProTic 2.0
                 </span>
@@ -40,28 +39,25 @@ const Navbar = () => {
             }   w-full lg:inline-flex lg:flex-grow lg:w-auto`}
             >
                 <div className='lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto'>
-                   
-
-                    <Link activeClassName='active' className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white '  to='Home'>                       
+                    <Link activeClassName='active' className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white '  to='Home'>
                         Inicio
                     </Link>
-                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Perfil'>                       
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Perfil'>
                         Perfil
                     </Link>
-                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Inscripciones'>                       
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Inscripciones'>
                         Inscripciones
                     </Link>
-                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='CrearProyectos'>                       
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='CrearProyectos'>
                         Crear Proyecto
                     </Link>
-
-
-                    
+                    <Link className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white ' activeClassName='active' to='Usuarios'>
+                        Usuarios
+                    </Link>
                 </div>
             </div>
       </nav>
     );
-
 }
 
 export default Navbar

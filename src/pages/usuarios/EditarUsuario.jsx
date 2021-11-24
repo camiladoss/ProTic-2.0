@@ -11,15 +11,12 @@ const EditarUsuario = () => {
 
     const navigate = useNavigate ();
     const { register, formState: { errors }, handleSubmit } = useForm();
-
-    // const{form, formData, updateFormData} = useFormData(null);
     const { _id } = useParams();
+
     const {data:queryData,error:queryError,loading:queryLoading} = useQuery(GET_USUARIO,{
         variables:{_id}
     });
-
-    const [editarUsuario, {error: mutationError }] =
-    useMutation(EDITAR_USUARIO);
+    const [editarUsuario, {error: mutationError}] = useMutation(EDITAR_USUARIO);
 
     useEffect(() => {
         console.log("Data servidor", queryData);
@@ -34,13 +31,6 @@ const EditarUsuario = () => {
         }
     }, [queryError, mutationError]);
 
-    // const submitForm= (e) => {
-    //     e.preventDefault();
-    //     console.log(formData);
-    //     editarUsuario({
-    //         variables:{_id, ...formData}
-    //     })
-    // };
     const onSubmit = data =>{
         console.log(data);
         editarUsuario({
@@ -50,13 +40,8 @@ const EditarUsuario = () => {
         navigate("/Usuarios");
     }
 
-    // useEffect(() => {
-    //     if(mutationData){
-    //         toast.success('Usuario modificado con exito')
-    //     }
-    // }, [mutationData]);
-
     if (queryLoading) { return <div>Cargando...</div>; }
+
     return (
         <div className="flex flex-col items-center w-9/12 m-auto">
             <div className="flex self-start">
@@ -186,8 +171,8 @@ const EditarUsuario = () => {
                                 }
                             })}
                         />
-                        {errors.identificacion?.type === 'required' && <span className="text-red-600">"La identificacion es requerida!"</span>}
-                        {errors.identificacion?.type === 'pattern' && <span className="text-red-600">"La identifiacion solo puede llevar numeros!"</span>}
+                        {errors.identificacion?.type === 'required' && <span className="text-red-600">"La identificación es requerida!"</span>}
+                        {errors.identificacion?.type === 'pattern' && <span className="text-red-600">"La identificación solo puede llevar numeros!"</span>}
                     </div>
                     <div className="w-full mb-6 md:mb-0" >
                         <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>

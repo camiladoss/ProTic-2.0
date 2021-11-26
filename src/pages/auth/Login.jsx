@@ -2,13 +2,14 @@ import React, { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from '@apollo/client'
-import { REGISTRO } from 'graphql/auth/mutations';
+import { LOGIN } from 'graphql/auth/mutations';
+import { useAuth } from 'context/authContext';
 
 const Login = () => {
-
+    const { setToken } = useAuth();
     const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const [registro, {data: dataMutation, error: mutationError}] = useMutation(REGISTRO);
+    const [login, {data: dataMutation, error: mutationError}] = useMutation(LOGIN);
 
     useEffect(() => {
         if(mutationError){
@@ -19,7 +20,7 @@ const Login = () => {
 
     const onSubmit = data =>{
         console.log(data);
-        registro({
+        login({
               variables:{...data}
         });
         // toast.success('Usuario modificado con exito');
@@ -28,13 +29,12 @@ const Login = () => {
     useEffect(()=>{
         console.log(dataMutation);
         if (dataMutation){
-            if (dataMutation.registro.token){
-                localStorage.setItem('token', dataMutation.registro.token);
-                navigate('/')
+            if (dataMutation.login.token){
+                setToken(dataMutation.login.token);
+                navigate('/home')
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dataMutation])
+    }, [dataMutation, setToken, navigate])
 
     const changePage = (()=>{
         navigate('/auth/register');

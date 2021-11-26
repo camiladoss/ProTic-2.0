@@ -11,10 +11,10 @@ import Home from 'pages/Home'
 import PrivateLayout from 'Layouts/PrivateLayout'
 import GestionProyectos from "pages/GestionProyectos";
 import CrearProyectos from "pages/CrearProyectos";
-import CrearAvances from "pages/CrearAvances";
-import GestionAvances from "pages/GestionAvances";
+import CrearAvances from "pages/avances/CrearAvances";
+import GestionAvances from "pages/avances/GestionAvances";
 import Inscripciones from "pages/Inscripciones";
-import HistorialAvances from "pages/HistorialAvances";
+import HistorialAvances from "pages/avances/HistorialAvances";
 import Perfil from "pages/Perfil";
 import IndexUsuarios from "pages/usuarios/IndexUsuarios";
 import EditarUsuario from "pages/usuarios/EditarUsuario";
@@ -92,6 +92,7 @@ function App() {
                 <Route path="/CrearProyectos" element={<CrearProyectos/>} />
                 <Route path="/GestionAvances" element={<GestionAvances/>} />
                 <Route path="/CrearAvances" element={<CrearAvances/>} />
+                <Route path="/GestionAvances/EditarAvances/:_id" element={<CrearAvances/>} />
                 <Route path="/Inscripciones" element={<Inscripciones/>} />
                 <Route path="/Historial" element={<HistorialAvances/>} />
                 <Route path="/Perfil" element={<Perfil/>} />

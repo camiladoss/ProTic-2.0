@@ -1,26 +1,27 @@
 import { gql } from "@apollo/client";
 
-const GET_AVANCES = gql`
-  query Avances {
-    Avances {
+const GET_AVANCE = gql`
+query Avance($_id: String!) {
+  Avance(_id: $_id) {
+    _id
+    proyecto {
       _id
-      descripcion
-      creadoPor {
-        nombre
-        apellido
-      }
-      proyecto {
-        nombre
-        _id
-      }
-      fecha
+      nombre
     }
+    fecha
+    descripcion
+    creadoPor {
+      nombre
+      apellido
+    }
+    observaciones
   }
+}
 `;
 
-const GET_AVANCE = gql`
+const GET_FILTRARAVANCES = gql`
   query FiltrarAvance($idProyecto: String!) {
-    filtrarAvance(idProyecto: $idProyecto) {
+    FiltrarAvance(idProyecto: $idProyecto) {
       _id
       proyecto {
         nombre
@@ -38,4 +39,4 @@ const GET_AVANCE = gql`
   }
 `;
 
-export { GET_AVANCES, GET_AVANCE };
+export { GET_FILTRARAVANCES, GET_AVANCE };

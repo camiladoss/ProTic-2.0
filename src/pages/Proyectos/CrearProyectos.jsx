@@ -1,15 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React,{useEffect} from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useQuery, useMutation } from '@apollo/client'
+import { GET_PROYECTO } from 'graphql/proyectos/queries'
+import { toast } from 'react-toastify';
+import { CREAR_PROYECTO } from 'graphql/proyectos/mutation';
+import { useForm } from "react-hook-form";
 
 
 const CrearProyectos = () => {
+  
+    const navigate = useNavigate ();
+    const { register, formState: { errors }, handleSubmit } = useForm();
+    const { _id } = useParams();
+
+    const {data:queryData,error:queryError,loading:queryLoading} = useQuery(GET_PROYECTO,{
+        variables:{_id}
+    });
+    const [crearProyectos, {error: mutationError}] = useMutation(CREAR_PROYECTO);
+
+    useEffect(() => {
+        console.log("Data servidor", queryData);
+    }, [queryData]);
+
+    useEffect(() => {
+      if(queryError){
+          toast.error('Error creando proyecto')
+      }
+      if(mutationError){
+          toast.error('Error modificado proyecto')
+      }
+  }, [queryError, mutationError]);
+  
+  const onSubmit = data =>{
+    console.log(data);
+    crearProyectos({
+          variables:{_id, ...data}
+    });
+    toast.success('Proyecto modificado con exito');
+    navigate("/Proyectos/GestionProyectos");
+}
+
+
   return (
     <div className="flex flex-col items-center w-9/12 m-auto">
         <div className="flex self-start">
-        <button className="">
-          <Link to="/GestionProyectos"></Link>
-          <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
-        </button>
+          <button className="">
+            <Link to="/Proyectos/CrearProyectos"></Link>
+            <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
+          </button>
         </div>
         <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Creación proyectos</h2>
         <form className="w-full items-center">
@@ -26,7 +64,21 @@ const CrearProyectos = () => {
                 type="text"
                 placeholder="Nombre"
                 required
+                defaultValue={queryData.Proyecto.nombre}
+                name="nombreProyecto"
+                {...register("nombreProyecto", {
+                  required:{
+                    value:true,
+                    message:"El campo es requerido"
+                  },
+                  pattern:{ 
+                    value:/^[A-Za-z]+$/i,
+                    message:"El valor no es correcto" 
+                    }
+                })}
               />
+              {errors.nombreProyecto?.type==="required"&&<span className="text-red-600">"El nombre del proyecto es requerido!"</span>}
+              {errors.nombreProyecto?.type==="pattern"&&<span className="text-red-600">"Valor invalido!"</span>}
             </div>
 
             <div className="w-full md:mb-0 flex flex-col">
@@ -35,9 +87,21 @@ const CrearProyectos = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-objG"
                 type="text"
-                placeholder="Objetivos generales"
-                required
+                placeholder="Objetivos Generales"
+                defaultValue={queryData.Proyecto.objetivosGenerales}
+                name="objetivosGenerales"
+                {...register("objetivosGenerales", {
+                  required:{
+                    value:true,
+                    message:"El campo es requerido"
+                  },
+                  pattern:{ 
+                    value:/^[A-Za-z]+$/i,
+                    message:"El valor no es correcto" 
+                    }
+                })}
               />
+        
             </div>
 
             <div className="w-full md:mb-0 flex flex-col">
@@ -54,7 +118,23 @@ const CrearProyectos = () => {
             <div className="w-full md:mb-0 flex flex-col">
               <label className="text-gray-700 text-md font-bold" for="grid-num">Presupuesto:</label>
               <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="number" placeholder="$$$" id="grid-num" required />
+              type="number" 
+              placeholder="$$$" 
+              id="grid-num"
+              defaultValue={queryData.Proyecto.objetivosGenerales}
+                name="presupuesto"
+                
+              {...register("presupuesto", {
+                required:{
+                  value:true,
+                  message:"El campo es requerido"
+                },
+                pattern:{ 
+                  value:/^\d{4,10}$/i,
+                  message:"El valor no es correcto" 
+                  }
+              })} 
+               />
             </div>
 
             <div className="w-full md:mb-0 flex flex-col">
@@ -72,6 +152,18 @@ const CrearProyectos = () => {
               <select
                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-nameLid"
+                defaultValue={queryData.Usuario.nombre}
+                name="nombreLider"
+                {...register("nombreLider",{
+                  required: {
+                  value:true,
+                  massage: "El campo es requerido"
+                  },
+                  pattern: {
+                    value: /^[A-Za-z]+$/i,
+                    massage: "El valor no es correcto",
+                    }
+                  })}
               >
                 <option>Valentina</option>
                 <option>Carlos</option>
@@ -84,7 +176,20 @@ const CrearProyectos = () => {
               <select
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-idLid"
+                defaultValue={queryData.Usuario.s}
+                name="idLider"
+                {...register("idLider",{
+                  required: {
+                  value:true,
+                  massage: "El campo es requerido"
+                  },
+                  pattern: {
+                    value: /^\d{4,10}$/i,
+                    massage: "El valor no es correcto",
+                    }
+                  })}
               >
+              
                 <option>132213</option>
                 <option>42342424</option>
                 <option>546745756</option>

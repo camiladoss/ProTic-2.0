@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from '@apollo/client'
 import { REGISTRO } from 'graphql/auth/mutations';
+import { useAuth } from 'context/authContext';
 
 const Register = () => {
+    const { setToken } = useAuth();
     const navigate = useNavigate();
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [registro, {data: dataMutation, error: mutationError}] = useMutation(REGISTRO);
@@ -27,12 +29,11 @@ const Register = () => {
         console.log(dataMutation);
         if (dataMutation){
             if (dataMutation.registro.token){
-                localStorage.setItem('token', dataMutation.registro.token);
-                navigate('/')
+                setToken(dataMutation.registro.token);
+                navigate('/Perfil')
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dataMutation])
+    }, [dataMutation, setToken, navigate])
 
     return (
         <div>

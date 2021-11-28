@@ -1,15 +1,12 @@
 import { gql } from '@apollo/client'
 
 const EDITAR_AVANCE = gql`
-mutation Mutation($id: String!, $proyecto: String!, $fecha: Date!, $descripcion: String!, $observaciones: [String] $creadoPor: String!) {
-    editarAvance(_id: $id, proyecto: $proyecto, fecha: $fecha, descripcion: $descripcion, observaciones: $observaciones, creadoPor: $creadoPor) {
+mutation editarAvance($_id: String!, $descripcion: String!, $observaciones: [String]) {
+    editarAvance(_id: $_id, descripcion: $descripcion, observaciones: $observaciones) {
       _id
-      proyecto
-      fecha
       descripcion
       observaciones
-      creadoPor
-
+      
     }
   }
   

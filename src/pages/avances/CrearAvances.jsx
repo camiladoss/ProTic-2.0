@@ -32,7 +32,7 @@ const CrearAvances = () => {
     }, [queryError, mutationError]);
 
     const onSubmit = data =>{
-        console.log(data);
+        console.log(_id);
         editarAvance({
               variables:{_id, ...data}
         });
@@ -60,6 +60,7 @@ const CrearAvances = () => {
               <label
                 className="text-gray-700 text-md font-bold"
                 htmlFor="grid-project-name"
+
               >
                 Nombre Proyecto:
               </label>
@@ -121,6 +122,34 @@ const CrearAvances = () => {
                 id="grid-Date-avance"
                 disabled
               />
+            </div>
+            <div className="w-full md:mb-0 flex flex-col ">
+              <label
+                className="text-gray-700 text-md font-bold"
+                htmlFor="grid-creadoPor-name"
+              >
+                Creado por:
+              </label>
+              <input
+                className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-creadoPor-name"
+                disable
+                type="text"
+                disabled
+                defaultValue={queryData.Avance.creadoPor.nombre}
+                name="creadoPor"
+                {...register("creadoPor", {
+                  
+                  pattern: {
+                    value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
+                    message: "Valor incorrecto",
+                  },
+                })}
+              />
+              
+              {errors.creadoPor?.type === "pattern" && (
+                <span className="text-red-600">"Valores inválidos"</span>
+              )}
             </div>
             <div className="w-full md:col-start-1 md:col-end-3 flex flex-col">
               <label

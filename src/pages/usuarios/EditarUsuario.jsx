@@ -1,17 +1,18 @@
 import React,{useEffect} from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
-import { GET_USUARIO } from 'graphql/usuarios/queries'
+import { GET_USUARIO, GET_ESTUDIANTES } from 'graphql/usuarios/queries'
 import { toast } from 'react-toastify';
 // import useFormData from 'hooks/useFormData';
 import { EDITAR_USUARIO } from 'graphql/usuarios/mutations';
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import PrivateRoute from 'components/PrivateRoute';
+import Select from "react-select";
 
 const EditarUsuario = () => {
 
     const navigate = useNavigate ();
-    const { register, formState: { errors }, handleSubmit } = useForm();
+    const { register, formState: { errors }, handleSubmit, control } = useForm();
     const { _id } = useParams();
 
     const {data:queryData,error:queryError,loading:queryLoading} = useQuery(GET_USUARIO,{
@@ -19,9 +20,12 @@ const EditarUsuario = () => {
     });
     const [editarUsuario, {error: mutationError}] = useMutation(EDITAR_USUARIO);
 
+    const {data:dataEstudiante, error:errorEstudiante} = useQuery(GET_ESTUDIANTES);
+
     useEffect(() => {
         console.log("Data servidor", queryData);
-    }, [queryData]);
+        console.log("Data servidor2", dataEstudiante);
+    }, [queryData, dataEstudiante]);
 
     useEffect(() => {
         if(queryError){
@@ -40,6 +44,21 @@ const EditarUsuario = () => {
         toast.success('Usuario modificado con exito');
         navigate("/Usuarios");
     }
+    const options  = [
+        {value:'AUTORIZADO', label: 'AUTORIZADO'},
+        {value:'PENDIENTE', label: 'PENDIENTE'},
+        {value:'NO_AUTORIZADO', label: 'NO AUTORIZADO'}
+    ];
+    const options2  = [
+        {value:'ESTUDIANTE', label: 'ESTUDIANTE'},
+        {value:'LIDER', label: 'LIDER'},
+        {value:'ADMINISTRADOR', label: 'ADMINISTRADOR'}
+    ];
+
+    const estudianteOpciones = dataEstudiante.Estudiantes.map((e)=>{
+        return {value: e._id, label: e.nombre+" "+e.apellido}
+      });
+
 
     if (queryLoading) { return <div>Cargando...</div>; }
 
@@ -174,7 +193,7 @@ const EditarUsuario = () => {
                             {errors.identificacion?.type === 'required' && <span className="text-red-600">"La identificación es requerida!"</span>}
                             {errors.identificacion?.type === 'pattern' && <span className="text-red-600">"La identificación solo puede llevar numeros!"</span>}
                         </div>
-                        <div className="w-full mb-6 md:mb-0" >
+                        {/* <div className="w-full mb-6 md:mb-0" >
                             <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>
                             <div className="relative">
                                 <select
@@ -209,8 +228,8 @@ const EditarUsuario = () => {
                             </div>
                             {errors.rol?.type === 'required' && <span className="text-red-600">"El rol es requerido!"</span>}
                             {errors.rol?.type === 'pattern' && <span className="text-red-600">"El rol no esta disponible!"</span>}
-                        </div>
-                        <div className="w-full mb-6 md:mb-0" >
+                        </div> */}
+                        {/* <div className="w-full mb-6 md:mb-0" >
                             <label className="text-gray-700 text-md font-bold" htmlFor="grid-estado">Estado:</label>
                             <div className="relative">
                                 <select
@@ -245,6 +264,55 @@ const EditarUsuario = () => {
                             </div>
                             {errors.estado?.type === 'required' && <span className="text-red-600">"La estado es requerido!"</span>}
                             {errors.estado?.type === 'pattern' && <span className="text-red-600">"El estado no esta disponible!"</span>}
+                        </div> */}
+                        <div className="w-full mb-6 md:mb-0" >
+                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>
+                            <Controller
+                                id="grid-rol"
+                                control={control}
+                                name="rol"
+                                render={({ field: {onChange, value} }) => (
+                                    <Select
+                                    className=""
+                                        defaultValue={options2.find(c => c.value === queryData.Usuario.rol)}
+                                        options={options2}
+                                        value={options2.find(c => c.value === value)}
+                                        onChange={val => onChange(val.value)}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="w-full mb-6 md:mb-0" >
+                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-estado">Estado:</label>
+                            <Controller
+                                id="grid-estado"
+                                control={control}
+                                name="estado"
+                                render={({ field: {onChange, value} }) => (
+                                    <Select
+                                        defaultValue={options.find(c => c.value === queryData.Usuario.estado)}
+                                        options={options}
+                                        value={options.find(c => c.value === value)}
+                                        onChange={val => onChange(val.value)}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="w-full mb-6 md:mb-0" >
+                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-estudiantes">Estudiantes:</label>
+                            <Controller
+                                id="grid-estudiantes"
+                                control={control}
+                                name="estudiantes"
+                                render={({ field: {onChange, value} }) => (
+                                    <Select
+                                        // defaultValue={options3.find(c => c.value === queryData.Usuario.estado)}
+                                        options={estudianteOpciones}
+                                        value={estudianteOpciones.find(c => c.value === value)}
+                                        onChange={val => onChange(val.value)}
+                                    />
+                                )}
+                            />
                         </div>
                         <div className="md:col-start-1 md:col-end-3 flex justify-center">
                             <button

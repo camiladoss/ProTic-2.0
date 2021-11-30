@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect, useState} from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_USUARIO, GET_ESTUDIANTES } from 'graphql/usuarios/queries'
@@ -20,7 +20,7 @@ const EditarUsuario = () => {
     });
     const [editarUsuario, {error: mutationError}] = useMutation(EDITAR_USUARIO);
 
-    const {data:dataEstudiante, error:errorEstudiante} = useQuery(GET_ESTUDIANTES);
+    const {data:dataEstudiante, error:errorEstudiante, loading:LoadingEstudiante} = useQuery(GET_ESTUDIANTES);
 
     useEffect(() => {
         console.log("Data servidor", queryData);
@@ -54,13 +54,12 @@ const EditarUsuario = () => {
         {value:'LIDER', label: 'LIDER'},
         {value:'ADMINISTRADOR', label: 'ADMINISTRADOR'}
     ];
+    var estudianteOpciones = [];
 
-    const estudianteOpciones = dataEstudiante.Estudiantes.map((e)=>{
+    if (dataEstudiante) {  estudianteOpciones = dataEstudiante.Estudiantes.map((e)=>{
         return {value: e._id, label: e.nombre+" "+e.apellido}
-      });
-
-
-    if (queryLoading) { return <div>Cargando...</div>; }
+      });}
+    if (queryLoading || LoadingEstudiante) { return <div>Cargando...</div>; }
 
     return (
         <div className="flex flex-col items-center w-9/12 m-auto">
@@ -298,22 +297,28 @@ const EditarUsuario = () => {
                                 )}
                             />
                         </div>
-                        <div className="w-full mb-6 md:mb-0" >
-                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-estudiantes">Estudiantes:</label>
-                            <Controller
-                                id="grid-estudiantes"
-                                control={control}
-                                name="estudiantes"
-                                render={({ field: {onChange, value} }) => (
-                                    <Select
-                                        // defaultValue={options3.find(c => c.value === queryData.Usuario.estado)}
-                                        options={estudianteOpciones}
-                                        value={estudianteOpciones.find(c => c.value === value)}
-                                        onChange={val => onChange(val.value)}
+                        {dataEstudiante ?
+                            (
+                                <div className="w-full mb-6 md:mb-0" >
+                                    <label className="text-gray-700 text-md font-bold" htmlFor="grid-estudiantes">Estudiantes:</label>
+                                    <Controller
+                                        id="grid-estudiantes"
+                                        control={control}
+                                        name="estudiantes"
+                                        render={({ field: {onChange, value} }) => (
+                                            <Select
+                                                // defaultValue={options3.find(c => c.value === queryData.Usuario.estado)}
+                                                options={estudianteOpciones}
+                                                value={estudianteOpciones.find(c => c.value === value)}
+                                                onChange={val => onChange(val.value)}
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                        </div>
+                                </div>
+                            ):(
+                                null
+                            )
+                        }
                         <div className="md:col-start-1 md:col-end-3 flex justify-center">
                             <button
                                 className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"

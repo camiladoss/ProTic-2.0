@@ -13,7 +13,7 @@ import GestionProyectos from "pages/GestionProyectos";
 import CrearProyectos from "pages/CrearProyectos";
 import CrearAvances from "pages/CrearAvances";
 import GestionAvances from "pages/GestionAvances";
-import Inscripciones from "pages/inscripciones/CrearInscripcion";
+import CrearInscripcion from "pages/inscripciones/CrearInscripcion";
 import GestionInscripcion from "pages/inscripciones/GestionInscripciones"
 import HistorialAvances from "pages/HistorialAvances";
 import Perfil from "pages/Perfil";
@@ -101,7 +101,8 @@ function App() {
                 <Route path="/GestionAvances" element={<GestionAvances/>} />
                 <Route path="/CrearAvances" element={<CrearAvances/>} />
                 <Route path="/GestionInscripcion" element={<GestionInscripcion/>} />
-                <Route path="/Inscripciones/CrearInscripcion/:_id" element={<Inscripciones/>} />
+                <Route path="/Inscripciones/CrearInscripcion" element={<CrearInscripcion/>} />
+                <Route path="/Inscripciones/EditarInscripcion/:_id" element={<CrearInscripcion/>} />
                 <Route path="/Historial" element={<HistorialAvances/>} />
                 <Route path="/Perfil" element={<Perfil/>} />
                 <Route path="/GestionAvances" element={<GestionAvances/>} />

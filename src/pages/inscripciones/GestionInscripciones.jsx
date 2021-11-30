@@ -1,14 +1,15 @@
 import React,{useEffect} from 'react'
 import { useQuery } from '@apollo/client'
-import { GET_INSCRIPCIONES } from 'graphql/inscripciones/queries'
+import { GET_FILTRARINSCRIPCION } from 'graphql/inscripciones/queries'
 import { useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PrivateRoute from "components/PrivateRoute";
 
 const GestionInscripcion = () => {
-
+    const idProyecto="61a15557c6e7bb5f2b79f6c3"
     const navigate = useNavigate ();
-    const {data,error,loading} = useQuery(GET_INSCRIPCIONES);
+    const {data,error,loading} = useQuery(GET_FILTRARINSCRIPCION,{ variables:{idProyecto}});
+    
 
     useEffect(() => {
         console.log("Data servidor", data);
@@ -37,8 +38,8 @@ const GestionInscripcion = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-columbiaBlue">
-                        {data.Inscripciones &&
-                            data.Inscripciones.map((i)=>{
+                        {data.filtrarInscripcion &&
+                            data.filtrarInscripcion.map((i)=>{
                                 return(
                                     <tr key={i._id} className="whitespace-nowrap">
                                         <td className="px-6 py-4 text-md text-gray-600">{i.estudiante.nombre}</td>
@@ -46,7 +47,7 @@ const GestionInscripcion = () => {
                                         <td className="px-6 py-4 text-md text-gray-600">{i.estado}</td>
                                         <td className="px-6 py-4 text-md text-gray-600">{i.proyecto.nombre}</td>
                                         <td className="px-6 py-4 text-md text-gray-600">
-                                            <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen" onClick={() => {navigate(`/Inscripciones/CrearInscripcion/${u._id}`)}}></button>
+                                            <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen" onClick={() => {navigate(`/Inscripciones/EditarInscripcion/${i._id}`)}}></button>
                                             {/* <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus"></button> */}
                                         </td>
                                     </tr>

@@ -11,11 +11,11 @@ import Home from 'pages/Home'
 import PrivateLayout from 'Layouts/PrivateLayout'
 import GestionProyectos from "pages/Proyectos/GestionProyectos";
 import CrearProyectos from "pages/Proyectos/CrearProyectos";
-import CrearAvances from "pages/CrearAvances";
-import GestionAvances from "pages/GestionAvances";
 import CrearInscripcion from "pages/inscripciones/CrearInscripcion";
 import GestionInscripcion from "pages/inscripciones/GestionInscripciones"
-import HistorialAvances from "pages/HistorialAvances";
+import CrearAvances from "pages/avances/CrearAvances";
+import GestionAvances from "pages/avances/GestionAvances";
+import HistorialAvances from "pages/avances/HistorialAvances";
 import Perfil from "pages/Perfil";
 import IndexUsuarios from "pages/usuarios/IndexUsuarios";
 import EditarUsuario from "pages/usuarios/EditarUsuario";
@@ -101,15 +101,14 @@ function App() {
                 <Route path="/GestionProyectos" element={<GestionProyectos/>} />
                 <Route path="/CrearProyectos" element={<CrearProyectos/>} />
                 <Route path="/GestionProyectos/EditarProyecto/:_id" element={<CrearProyectos/>} />
-                <Route path="/GestionAvances" element={<GestionAvances/>} />
-                <Route path="/CrearAvances" element={<CrearAvances/>} />
+                <Route path="/Proyectos/MisProyectos" element={<MisProyectos/>} />
                 <Route path="/GestionInscripcion" element={<GestionInscripcion/>} />
                 <Route path="/Inscripciones/CrearInscripcion" element={<CrearInscripcion/>} />
-                <Route path="/Proyectos/MisProyectos" element={<MisProyectos/>} />
                 <Route path="/Inscripciones/EditarInscripcion/:_id" element={<CrearInscripcion/>} />
-                <Route path="/Historial" element={<HistorialAvances/>} />
-                <Route path="/Perfil" element={<Perfil/>} />
                 <Route path="/GestionAvances" element={<GestionAvances/>} />
+                <Route path="/GestionAvances/EditarAvances/:_id" element={<CrearAvances/>} />
+                <Route path="/Historial" element={<HistorialAvances/>} />
+                <Route path="/Perfil" element={<Perfil/>} />                
               </Route>
             </Routes>
           </BrowserRouter>

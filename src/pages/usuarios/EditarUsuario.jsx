@@ -12,20 +12,24 @@ import Select from "react-select";
 const EditarUsuario = () => {
 
     const navigate = useNavigate ();
-    const { register, formState: { errors }, handleSubmit, control } = useForm();
+    const { register, formState: { errors }, handleSubmit, control, reset  } = useForm({ mode: 'onBlur' });
     const { _id } = useParams();
 
+    const {data:dataEstudiante, error:errorEstudiante, loading:LoadingEstudiante} = useQuery(GET_ESTUDIANTES,{fetchPolicy: "no-cache"});
     const {data:queryData,error:queryError,loading:queryLoading} = useQuery(GET_USUARIO,{
-        variables:{_id}
+        skip: !_id,
+        variables:{_id},
+        onCompleted: data => reset(data.Usuario),
     });
-    const [editarUsuario, {error: mutationError}] = useMutation(EDITAR_USUARIO);
-
-    const {data:dataEstudiante, error:errorEstudiante, loading:LoadingEstudiante} = useQuery(GET_ESTUDIANTES);
+    const [editarUsuario, {error: mutationError}] = useMutation(EDITAR_USUARIO,{
+    });
 
     useEffect(() => {
         console.log("Data servidor", queryData);
         console.log("Data servidor2", dataEstudiante);
     }, [queryData, dataEstudiante]);
+
+
 
     useEffect(() => {
         if(queryError){
@@ -66,7 +70,11 @@ const EditarUsuario = () => {
             <div className="flex self-start">
                 <Link to="/Usuarios"> <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i></Link>
             </div>
-            <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Editar Usuario</h2>
+            {_id?(
+                    <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Editar Usuario</h2>
+                ):(
+                    <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Crear Usuario</h2>
+            )}
             <PrivateRoute roleList={['ADMINISTRADOR', 'AUTORIZADO']}>
                 <form
                 className="w-full items-center"
@@ -82,7 +90,7 @@ const EditarUsuario = () => {
                             <input
                                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-user-name"
-                                defaultValue={queryData.Usuario.nombre}
+
                                 type="text"
                                 name="nombre"
                                 {...register("nombre",{
@@ -108,7 +116,6 @@ const EditarUsuario = () => {
                             <input
                                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-user-lastname"
-                                defaultValue={queryData.Usuario.apellido}
                                 type="text"
                                 name="apellido"
                                 {...register("apellido",{
@@ -125,21 +132,27 @@ const EditarUsuario = () => {
                             {errors.apellido?.type === 'required' && <span className="text-red-600">"El apellido es requerido!"</span>}
                             {errors.apellido?.type === 'pattern' && <span className="text-red-600">"El apellido solo puede llevar letras!"</span>}
                         </div>
-                        <div className="w-full md:mb-0 flex flex-col">
-                            <label
-                                className="text-gray-700 text-md font-bold"
-                                htmlFor="grid-IdProyect">
-                                ID Usuario:
-                            </label>
-                            <input
-                                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-IdProyect"
-                                value={queryData.Usuario._id}
-                                type="text"
-                                name="_id"
-                                disabled
-                            />
-                        </div>
+                        {_id ?
+                            (
+                                <div className="w-full md:mb-0 flex flex-col">
+                                    <label
+                                        className="text-gray-700 text-md font-bold"
+                                        htmlFor="grid-IdProyect">
+                                        ID Usuario:
+                                    </label>
+                                    <input
+                                        className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                        id="grid-IdProyect"
+                                        value={_id}
+                                        type="text"
+                                        name="_id"
+                                        disabled
+                                    />
+                                </div>
+                            ):(
+                                null
+                            )
+                        }
                         <div className="w-full md:mb-0 flex flex-col ">
                             <label
                                 className="text-gray-700 text-md font-bold"
@@ -149,7 +162,7 @@ const EditarUsuario = () => {
                             <input
                                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-user-email"
-                                defaultValue={queryData.Usuario.correo}
+
                                 type="text"
                                 name="correo"
                                 {...register("correo",{
@@ -175,7 +188,6 @@ const EditarUsuario = () => {
                             <input
                                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-user-Id"
-                                defaultValue={queryData.Usuario.identificacion}
                                 type="text"
                                 name="identificacion"
                                 {...register("identificacion",{
@@ -264,40 +276,52 @@ const EditarUsuario = () => {
                             {errors.estado?.type === 'required' && <span className="text-red-600">"La estado es requerido!"</span>}
                             {errors.estado?.type === 'pattern' && <span className="text-red-600">"El estado no esta disponible!"</span>}
                         </div> */}
-                        <div className="w-full mb-6 md:mb-0" >
-                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>
-                            <Controller
-                                id="grid-rol"
-                                control={control}
-                                name="rol"
-                                render={({ field: {onChange, value} }) => (
-                                    <Select
-                                    className=""
-                                        defaultValue={options2.find(c => c.value === queryData.Usuario.rol)}
-                                        options={options2}
-                                        value={options2.find(c => c.value === value)}
-                                        onChange={val => onChange(val.value)}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="w-full mb-6 md:mb-0" >
-                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-estado">Estado:</label>
-                            <Controller
-                                id="grid-estado"
-                                control={control}
-                                name="estado"
-                                render={({ field: {onChange, value} }) => (
-                                    <Select
-                                        defaultValue={options.find(c => c.value === queryData.Usuario.estado)}
-                                        options={options}
-                                        value={options.find(c => c.value === value)}
-                                        onChange={val => onChange(val.value)}
-                                    />
-                                )}
-                            />
-                        </div>
-                        {dataEstudiante ?
+                        {queryData?
+                            (
+                            <div className="w-full mb-6 md:mb-0" >
+                                <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>
+                                <Controller
+                                    id="grid-rol"
+                                    control={control}
+                                    name="rol"
+                                    render={({ field: {onChange, value} }) => (
+                                        <Select
+                                        className=""
+                                            // defaultValue={options2.find(c => c.value === dataUsuario.rol)}
+                                            options={options2}
+                                            value={options2.find(c => c.value === value)}
+                                            onChange={val => onChange(val.value)}
+                                        />
+                                    )}
+                                />
+                            </div>
+                            ):(
+                                null
+                            )
+                        }
+                        {queryData?
+                            (
+                            <div className="w-full mb-6 md:mb-0" >
+                                <label className="text-gray-700 text-md font-bold" htmlFor="grid-estado">Estado:</label>
+                                <Controller
+                                    id="grid-estado"
+                                    control={control}
+                                    name="estado"
+                                    render={({ field: {onChange, value} }) => (
+                                        <Select
+                                            // defaultValue={options.find(c => c.value === dataUsuario.estado)}
+                                            options={options}
+                                            value={options.find(c => c.value === value)}
+                                            onChange={val => onChange(val.value)}
+                                        />
+                                    )}
+                                />
+                            </div>
+                            ):(
+                                null
+                            )
+                        }
+                        {dataEstudiante && _id ?
                             (
                                 <div className="w-full mb-6 md:mb-0" >
                                     <label className="text-gray-700 text-md font-bold" htmlFor="grid-estudiantes">Estudiantes:</label>
@@ -319,13 +343,23 @@ const EditarUsuario = () => {
                                 null
                             )
                         }
-                        <div className="md:col-start-1 md:col-end-3 flex justify-center">
-                            <button
-                                className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
-                                type="submit">
-                                Editar
-                            </button>
-                        </div>
+                        {_id?(
+                            <div className="md:col-start-1 md:col-end-3 flex justify-center">
+                                <button
+                                    className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+                                    type="submit">
+                                    Editar
+                                </button>
+                            </div>
+                        ):(
+                            <div className="md:col-start-1 md:col-end-3 flex justify-center">
+                                <button
+                                    className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+                                    type="submit">
+                                    Crear
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </form>
             </PrivateRoute>

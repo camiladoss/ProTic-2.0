@@ -95,6 +95,7 @@ function App() {
                 <Route path="/home" element={<Home/>} />
                 <Route path="/Usuarios" element={<IndexUsuarios/>} />
                 <Route path="/Usuarios/EditarUsuario/:_id" element={<EditarUsuario/>} />
+                <Route path="/Usuarios/CrearUsuario" element={<EditarUsuario/>} />
                 <Route path="/GestionProyectos" element={<GestionProyectos/>} />
                 <Route path="/CrearProyectos" element={<CrearProyectos/>} />
                 <Route path="/GestionAvances" element={<GestionAvances/>} />

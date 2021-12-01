@@ -2,16 +2,18 @@ import { gql } from '@apollo/client'
 
 const GET_PROYECTOS = gql`
 query Proyectos {
-    Proyectos {
-      estado
+  
+  Proyectos {
+    nombre
+    estado
+    fase
+    lider {
       nombre
-      fase
-      lider {
-        nombre
-        apellido
-      }
+      apellido
     }
+    _id
   }
+}
 `;
 
 const GET_PROYECTO=gql `

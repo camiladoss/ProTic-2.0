@@ -79,31 +79,6 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-      <BrowserRouter>
-        <Routes>
-          <Route  path="/" element={<Layout/>}>
-            <Route path="/" element={<Index/>} />
-          </Route>
-          <Route  path="/auth" element={<AuthLayout/>}>
-            <Route path="register" element={<Register/>} />
-            <Route path="login" element={<Login/>} />
-            <Route path="passwordReset" element={<PasswordReset/>} />
-          </Route>
-          <Route  path="/" element={<PrivateLayout/>}>
-            <Route path="/home" element={<Home/>} />
-            <Route path="/Usuarios" element={<IndexUsuarios/>} />
-            <Route path="/Usuarios/EditarUsuario/:_id" element={<EditarUsuario/>} />
-            <Route path="/Proyectos/GestionProyectos" element={<GestionProyectos/>} />
-            <Route path="/Proyectos/CrearProyectos" element={<CrearProyectos/>} />
-            <Route path="/GestionAvances" element={<GestionAvances/>} />
-            <Route path="/CrearAvances" element={<CrearAvances/>} />
-            <Route path="/Inscripciones" element={<Inscripciones/>} />
-            <Route path="/Historial" element={<HistorialAvances/>} />
-            <Route path="/Perfil" element={<Perfil/>} />
-            <Route path="/GestionAvances" element={<GestionAvances/>} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
       <AuthContext.Provider value={{ authToken, setAuthToken, setToken }}>
         <UserContext.Provider value={{ userData, setUserData }}>
           <BrowserRouter>
@@ -117,11 +92,12 @@ function App() {
                 <Route path="passwordReset" element={<PasswordReset/>} />
               </Route>
               <Route  path="/" element={<PrivateLayout/>}>
-                <Route path="/home" element={<Home/>} />
+                <Route path="/Home" element={<Home/>} />
                 <Route path="/Usuarios" element={<IndexUsuarios/>} />
                 <Route path="/Usuarios/EditarUsuario/:_id" element={<EditarUsuario/>} />
                 <Route path="/GestionProyectos" element={<GestionProyectos/>} />
                 <Route path="/CrearProyectos" element={<CrearProyectos/>} />
+                <Route path="/GestionProyectos/EditarProyecto/:_id" element={<CrearProyectos/>} />
                 <Route path="/GestionAvances" element={<GestionAvances/>} />
                 <Route path="/CrearAvances" element={<CrearAvances/>} />
                 <Route path="/Inscripciones" element={<Inscripciones/>} />

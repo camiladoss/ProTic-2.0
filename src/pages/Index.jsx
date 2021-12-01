@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
 
 const Index = () => {
-    return (
-        <div>
-            HOLA SOY EL INDEX
-        </div>
-    )
-}
+  return (
+    <div>
+      Yo soy el Index
+    </div>
+  );
+};
+
 
 export default Index
+

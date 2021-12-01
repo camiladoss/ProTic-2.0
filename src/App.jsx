@@ -9,8 +9,8 @@ import Index from 'pages/Index'
 import Layout from 'Layouts/PublicLayout'
 import Home from 'pages/Home'
 import PrivateLayout from 'Layouts/PrivateLayout'
-import GestionProyectos from "pages/GestionProyectos";
-import CrearProyectos from "pages/CrearProyectos";
+import GestionProyectos from "pages/Proyectos/GestionProyectos";
+import CrearProyectos from "pages/Proyectos/CrearProyectos";
 import CrearAvances from "pages/CrearAvances";
 import GestionAvances from "pages/GestionAvances";
 import CrearInscripcion from "pages/inscripciones/CrearInscripcion";
@@ -94,12 +94,13 @@ function App() {
                 <Route path="passwordReset" element={<PasswordReset/>} />
               </Route>
               <Route  path="/" element={<PrivateLayout/>}>
-                <Route path="/home" element={<Home/>} />
+                <Route path="/Home" element={<Home/>} />
                 <Route path="/Usuarios" element={<IndexUsuarios/>} />
                 <Route path="/Usuarios/EditarUsuario/:_id" element={<EditarUsuario/>} />
                 <Route path="/Usuarios/CrearUsuario" element={<EditarUsuario/>} />
                 <Route path="/GestionProyectos" element={<GestionProyectos/>} />
                 <Route path="/CrearProyectos" element={<CrearProyectos/>} />
+                <Route path="/GestionProyectos/EditarProyecto/:_id" element={<CrearProyectos/>} />
                 <Route path="/GestionAvances" element={<GestionAvances/>} />
                 <Route path="/CrearAvances" element={<CrearAvances/>} />
                 <Route path="/GestionInscripcion" element={<GestionInscripcion/>} />

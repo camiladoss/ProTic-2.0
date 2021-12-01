@@ -25,4 +25,21 @@ const EDITAR_INSCRIPCION = gql`
   }
 `;
 
-export { EDITAR_INSCRIPCION };
+const CREAR_INSCRIPCION = gql`
+  mutation Mutation($proyecto: String!, $estudiante: String!) {
+    crearInscripcion(proyecto: $proyecto, estudiante: $estudiante) {
+      proyecto {
+        _id
+        nombre
+      }
+      estado
+      estudiante {
+        _id
+        nombre
+        apellido
+      }
+    }
+  }
+`;
+
+export { EDITAR_INSCRIPCION, CREAR_INSCRIPCION };

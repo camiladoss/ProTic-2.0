@@ -35,8 +35,7 @@ const EditarUsuario = () => {
     onCompleted: (data) => reset(data.Usuario),
   });
   const [editarUsuario, { error: mutationError }] = useMutation(
-    EDITAR_USUARIO,
-    {}
+    EDITAR_USUARIO
   );
 
   useEffect(() => {

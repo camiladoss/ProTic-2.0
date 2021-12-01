@@ -5,8 +5,10 @@ import { GET_INSCRIPCION } from "graphql/inscripciones/queries";
 import { toast } from "react-toastify";
 // import useFormData from 'hooks/useFormData';
 import { EDITAR_INSCRIPCION } from "graphql/inscripciones/mutations";
-import { useForm } from "react-hook-form";
 import PrivateRoute from "components/PrivateRoute";
+import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
+
 
 const CrearInscripcion = () => {
   const navigate = useNavigate();
@@ -14,7 +16,9 @@ const CrearInscripcion = () => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+    control,
+    reset,
+  } = useForm({ mode: "onBlur" });
   const { _id } = useParams();
 
   const {

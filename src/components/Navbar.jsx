@@ -65,7 +65,7 @@ const Navbar = () => {
                         </NavLink>
                     </PrivateComponent>
                     <PrivateComponent roleList={['ESTUDIANTES','LIDER', 'AUTORIZADO']}>
-                        <NavLink className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white '  to='/home'>
+                        <NavLink className='lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white '  to='/Proyectos/MisProyectos'>
                             Mis Proyectos
                         </NavLink>
                     </PrivateComponent>

@@ -22,6 +22,7 @@ import EditarUsuario from "pages/usuarios/EditarUsuario";
 import AuthLayout from 'Layouts/AuthLayout'
 import Register from 'pages/auth/Register'
 import Login from "pages/auth/Login";
+import MisProyectos from 'pages/Proyectos/MisProyectos'
 import PasswordReset from "pages/auth/PasswordReset";
 import { AuthContext } from 'context/authContext'
 import { UserContext } from 'context/userContext';
@@ -103,6 +104,7 @@ function App() {
                 <Route path="/CrearAvances" element={<CrearAvances/>} />
                 <Route path="/GestionInscripcion" element={<GestionInscripcion/>} />
                 <Route path="/Inscripciones/CrearInscripcion" element={<CrearInscripcion/>} />
+                <Route path="/Proyectos/MisProyectos" element={<MisProyectos/>} />
                 <Route path="/Inscripciones/EditarInscripcion/:_id" element={<CrearInscripcion/>} />
                 <Route path="/Historial" element={<HistorialAvances/>} />
                 <Route path="/Perfil" element={<Perfil/>} />

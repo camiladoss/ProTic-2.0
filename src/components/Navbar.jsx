@@ -71,7 +71,7 @@ const Navbar = () => {
               Inscripciones
             </NavLink>
           </PrivateComponent>
-          <PrivateComponent roleList={["LIDER", "ADMINISTRADOR", "AUTORIZADO"]}>
+          <PrivateComponent roleList={["LIDER", "ADMINISTRADOR", "ESTUDIANTE", "AUTORIZADO"]}>
             <NavLink
               className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white "
               to="/GestionProyectos"
@@ -79,7 +79,7 @@ const Navbar = () => {
               Proyectos
             </NavLink>
           </PrivateComponent>
-          <PrivateComponent roleList={["ESTUDIANTES", "LIDER", "AUTORIZADO"]}>
+          <PrivateComponent roleList={["ESTUDIANTE", "LIDER", "AUTORIZADO"]}>
             <NavLink
               className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-white font-bold items-center justify-center buttonsNavBar hover:text-white "
               to="/Proyectos/MisProyectos"

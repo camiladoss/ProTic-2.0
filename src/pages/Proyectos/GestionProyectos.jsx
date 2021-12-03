@@ -4,9 +4,8 @@ import { useQuery, useMutation } from '@apollo/client'
 import { GET_PROYECTOS } from 'graphql/proyectos/queries'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useUser } from 'context/userContext' 
+import { useUser } from 'context/userContext'
 import { CREAR_INSCRIPCION } from 'graphql/inscripciones/mutations'
-
 
 const GestionProyectos = () => {
   const navigate = useNavigate();
@@ -22,17 +21,27 @@ const GestionProyectos = () => {
   }, [error]);
 
   const {userData} = useUser();
-  const [inscripcion, { error: mutationError }] = useMutation(
-    CREAR_INSCRIPCION
-  );
-  const CrearInscripcion=(proyecto)=>{
+  const [inscripcion, { error: mutationError }] = useMutation(CREAR_INSCRIPCION, { errorPolicy: 'all' });
+  useEffect(() => {
+    if (error) {
+      toast.error("Error consultado usuarios");
+    }
+    if (mutationError) {
+      toast.error("Error modificado el usuario");
+    }
+  }, [error, mutationError]);
+
+  const CrearInscripcion=  (proyecto)=>{
     console.log(userData._id)
-    console.log(proyecto)
+    console.log(data.Proyectos)
     inscripcion({
-      variables: {"estudiante": userData._id, "proyecto": proyecto },
-    });
+      variables: {"estudiante": userData._id, "proyecto": proyecto }
+      });
     toast.success("Inscripción realizada con éxito");
+    window.location.reload(false)
   }
+
+  const obj = userData._id
 
   if (loading) { return <div>Cargando...</div>; }
 
@@ -69,7 +78,12 @@ const GestionProyectos = () => {
                   <td className="px-6 py-4 text-md text-gray-600">{p.fase}</td>
                   <td className="px-6 py-4 text-md text-gray-600">
                     <button className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen" onClick={() => {navigate(`/GestionProyectos/EditarProyecto/${p._id}`)}}></button>
-                    <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus" onClick={() => {CrearInscripcion(p._id)}} ></button>
+                    {p.inscripciones.map(i => i.estudiante._id).includes(obj) ? (
+                      null
+                    ) : (
+                      <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus" onClick={() => {CrearInscripcion(p._id)}} >
+                      </button>
+                    )}
                   </td>
                 </tr>
                 )

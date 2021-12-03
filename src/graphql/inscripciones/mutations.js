@@ -30,13 +30,10 @@ const CREAR_INSCRIPCION = gql`
     crearInscripcion(proyecto: $proyecto, estudiante: $estudiante) {
       proyecto {
         _id
-        nombre
       }
       estado
       estudiante {
         _id
-        nombre
-        apellido
       }
     }
   }

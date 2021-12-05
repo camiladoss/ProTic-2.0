@@ -37,5 +37,15 @@ query Estudiantes {
     }
   }
 `;
+const GET_LIDERES = gql`
+query Lideres {
+    Lideres {
+    nombre
+    apellido
+    identificacion
+    _id
+    }
+  }
+`;
 
-export { GET_USUARIOS, GET_USUARIO, GET_ESTUDIANTES };
+export { GET_USUARIOS, GET_USUARIO, GET_ESTUDIANTES, GET_LIDERES };

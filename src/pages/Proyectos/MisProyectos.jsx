@@ -46,7 +46,7 @@ const MisProyectos = () => {
   }
   return (
     <div className="flex flex-col items-center w-9/12 m-auto">
-      <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
+      <h2 className="font-bold text-2xl mb-4 text-gray-700 flex mt-10">
         Mis Proyectos
       </h2>
       <input

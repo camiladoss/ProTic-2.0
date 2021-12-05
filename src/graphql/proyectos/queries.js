@@ -21,26 +21,23 @@ const GET_PROYECTOS = gql`
 `;
 
 const GET_PROYECTO = gql`
-  query Proyecto($_id: String!) {
-    Proyecto(_id: $_id) {
+query Proyecto($_id: String!) {
+  Proyecto(_id: $_id) {
+    nombre
+    presupuesto
+    fechaInicio
+    fechaFin
+    estado
+    fase
+    lider {
       _id
-      nombre
-      presupuesto
-      fechaInicio
-      fechaFin
-      estado
-      fase
-      lider {
-        nombre
-        apellido
-        _id
-      }
-      objetivos {
-        descripcion
-        tipo
-      }
+    }
+    objetivoGeneral
+    objetivos {
+      descripcion
     }
   }
+}
 `;
 
 const GET_MIS_PROYECTOS = gql`

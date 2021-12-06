@@ -8,6 +8,7 @@ import { GET_LIDERES } from "graphql/usuarios/queries";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import PrivateRoute from "components/PrivateRoute";
+import moment from 'moment';
 
 const CrearProyecto = () => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const CrearProyecto = () => {
   const { _id } = useParams();
   const [obj, setObj] = useState([]);
   const [objetivos, setObjetivos ]= useState([]);
+  const [fechaInit, setFechaInit] = useState();
+  const [fechaFin, setFechaFin] = useState();
   var listaOptions = [];
 
   const {
@@ -53,6 +56,10 @@ const CrearProyecto = () => {
       setObjetivos(queryData.Proyecto.objetivos.map((o)=>{
         return {descripcion: o.descripcion}
       }))
+    }
+    if (queryData){
+      setFechaInit(moment(queryData.Proyecto.fechaInicio).utc().format('YYYY-MM-DD'));
+      setFechaFin(moment(queryData.Proyecto.fechaFin).utc().format('YYYY-MM-DD'));
     }
   }, [queryData]);
 
@@ -112,7 +119,7 @@ const CrearProyecto = () => {
     console.log(data);
     if(_id){
       editarProyecto({
-        variables: { _id, nombre:data.nombre, presupuesto:data.presupuesto, estado:data.estado, objetivos:objetivos, fase: data.fase, lider:data.lider._id, objetivoGeneral:data.objetivoGeneral, fechaInicio:data.fechaInicio, fechaFin:data.fechaFin },
+        variables: { _id, nombre:data.nombre, presupuesto:data.presupuesto, estado:data.estado, objetivos:objetivos, fase: data.fase, lider:data.lider._id, objetivoGeneral:data.objetivoGeneral, fechaInicio:fechaInit, fechaFin:fechaFin },
       })
       toast.success("Proyecto editado con exito");
       navigate("/GestionProyectos");
@@ -229,14 +236,9 @@ const CrearProyecto = () => {
               type="date"
               placeholder="Fecha de inicio"
               name="fechaInicio"
-              {...register("fechaInicio", {
-              })}
+              defaultValue={fechaInit}
+              onChange = {(e) =>{setFechaInit(e.target.value)}}
             />
-            {errors.FechaInicio?.type === "required" && (
-              <span className="text-red-600">
-                "La fecha de inicio es requerida!"
-              </span>
-            )}
           </div>
           <div className="w-full md:mb-0 flex flex-col">
             <label
@@ -250,8 +252,8 @@ const CrearProyecto = () => {
               type="date"
               placeholder="Fecha de terminación"
               name="fechaFin"
-              {...register("fechaFin", {
-              })}
+              defaultValue={fechaFin}
+              onChange = {(e) =>{setFechaFin(e.target.value)}}
             />
           </div>
           {_id ? (
@@ -382,7 +384,7 @@ const CrearProyecto = () => {
           <table className="border-b border-blue-300 shadow">
             <thead className="bg-maximunBlue">
               <tr>
-                <th className="px-6 py-2 text-md text-gray-700">Objetivo</th>
+                <th className="px-6 py-2 text-md text-gray-700">Objetivos Especificos</th>
                 <th className="px-6 py-2 text-md text-gray-700">Eliminar</th>
               </tr>
             </thead>

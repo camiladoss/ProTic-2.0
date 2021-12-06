@@ -9,7 +9,7 @@ import { CREAR_INSCRIPCION } from 'graphql/inscripciones/mutations'
 
 const GestionProyectos = () => {
   const navigate = useNavigate();
-  const { data, error, loading } = useQuery(GET_PROYECTOS);
+  const { data, error, loading } = useQuery(GET_PROYECTOS, { fetchPolicy: "no-cache" });
 
   useEffect(() => {
     console.log("Data servidor", data);

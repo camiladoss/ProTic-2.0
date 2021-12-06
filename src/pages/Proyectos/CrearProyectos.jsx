@@ -111,21 +111,17 @@ const CrearProyecto = () => {
   const onSubmit = (data) => {
     console.log(data);
     if(_id){
-      console.log({objetivos:objetivos});
-      // const enviarobj = objetivos.map((O)=>{
-      //   return {descripcion:o.descripcion}
-      // });
-      console.log(_id);
       editarProyecto({
-        variables: { _id, nombre:data.nombre, presupuesto:data.presupuesto, estado:data.estado, objetivos:objetivos, fase: data.fase, lider:data.lider._id, objetivoGeneral:data.objetivoGeneral, fecha:data.fechaInicio, },
+        variables: { _id, nombre:data.nombre, presupuesto:data.presupuesto, estado:data.estado, objetivos:objetivos, fase: data.fase, lider:data.lider._id, objetivoGeneral:data.objetivoGeneral, fechaInicio:data.fechaInicio, fechaFin:data.fechaFin },
       })
       toast.success("Proyecto editado con exito");
       navigate("/GestionProyectos");
     }else{
-      // crearProyecto({
-      //   variables: { _id, ...data },
-      // });
-      // toast.success("Proyecto editado con exito");
+      console.log(data);
+      crearProyecto({
+        variables: { _id,objetivos:objetivos, ...data },
+      });
+      toast.success("Proyecto editado con exito");
       navigate("/GestionProyectos");
     }
   };
@@ -232,8 +228,8 @@ const CrearProyecto = () => {
               id="grid-initDate"
               type="date"
               placeholder="Fecha de inicio"
-              name="FechaInicio"
-              {...register("FechaInicio", {
+              name="fechaInicio"
+              {...register("fechaInicio", {
               })}
             />
             {errors.FechaInicio?.type === "required" && (
@@ -250,9 +246,12 @@ const CrearProyecto = () => {
               Fecha de terminación:
             </label>
             <input
-              id="FinDate"
+              id="grid-FinDate"
               type="date"
               placeholder="Fecha de terminación"
+              name="fechaFin"
+              {...register("fechaFin", {
+              })}
             />
           </div>
           {_id ? (
@@ -293,7 +292,7 @@ const CrearProyecto = () => {
                 render={({ field: { onChange, value } }) => (
                   <Select
                     // defaultValue={options.find(c => c.value === dataUsuario.estado)}
-                    options={options}
+                    options={options2}
                     value={options2.find((c) => c.value === value)}
                     onChange={(val) => onChange(val.value)}
                   />
@@ -305,14 +304,14 @@ const CrearProyecto = () => {
             <div className="w-full mb-6 md:mb-0">
               <label
                 className="text-gray-700 text-md font-bold"
-                htmlFor="grid-estudiantes"
+                htmlFor="grid-lider"
               >
                 Lider:
               </label>
               <Controller
-                id="grid-estudiantes"
+                id="grid-lider"
                 control={control}
-                name="estudiantes"
+                name="lider"
                 render={({ field: { onChange, value } }) => (
                   <Select
                     // defaultValue={options3.find(c => c.value === queryData.Usuario.estado)}
@@ -398,6 +397,7 @@ const CrearProyecto = () => {
                       <td className=" text-md text-center text-gray-600">
                         <button
                           className="px-4 py-1 text-md text-white bg-red-400 rounded fas fa-trash-alt"
+                          type="button"
                           onClick={() => {deleteItem(i)}}
                         ></button>
                       </td>

@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
+import Cards from "../components/Cards";
 
 const Home = () => {
-    return (
-        <div>
-            SOY EL HOME
-        </div>
-    )
-}
+  return (
+    <div className="flex flex row flex-wrap justify-center">
+      <Cards />
+    </div>
+  );
+};
+
 
 export default Home

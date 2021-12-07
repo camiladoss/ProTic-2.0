@@ -9,38 +9,48 @@ import { useForm } from "react-hook-form";
 import PrivateRoute from "components/PrivateRoute";
 
 const CrearAvances = () => {
-    const navigate = useNavigate ();
-    const { register, formState: { errors }, handleSubmit } = useForm();
-    const { _id } = useParams();
+  const navigate = useNavigate();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+  const { _id } = useParams();
 
-    const {data:queryData,error:queryError,loading:queryLoading} = useQuery(GET_AVANCE,{
-        variables:{_id}
-    });
-    const [editarAvance, {error: mutationError}] = useMutation(EDITAR_AVANCE);
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+  } = useQuery(GET_AVANCE, {
+    variables: { _id },
+  });
+  const [editarAvance, { error: mutationError }] = useMutation(EDITAR_AVANCE);
 
-    useEffect(() => {
-        console.log("Data servidor", queryData);
-    }, [queryData]);
+  useEffect(() => {
+    console.log("Data servidor", queryData);
+  }, [queryData]);
 
-    useEffect(() => {
-        if(queryError){
-            toast.error('Error consultado el avance')
-        }
-        if(mutationError){
-            toast.error('Error modificado el avance')
-        }
-    }, [queryError, mutationError]);
-
-    const onSubmit = data =>{
-        console.log(_id);
-        editarAvance({
-              variables:{_id, ...data}
-        });
-        toast.success('Avance modificado con exito');
-        navigate("/GestionAvances");
+  useEffect(() => {
+    if (queryError) {
+      toast.error("Error consultado el avance");
     }
+    if (mutationError) {
+      toast.error("Error modificado el avance");
+    }
+  }, [queryError, mutationError]);
 
-    if (queryLoading) { return <div>Cargando...</div>; }
+  const onSubmit = (data) => {
+    console.log(_id);
+    editarAvance({
+      variables: { _id, ...data },
+    });
+    toast.success("Avance modificado con exito");
+    navigate("/GestionAvances");
+  };
+
+  if (queryLoading) {
+    return <div>Cargando...</div>;
+  }
 
   return (
     <div className="flex flex-col items-center w-9/12 m-auto">
@@ -60,7 +70,6 @@ const CrearAvances = () => {
               <label
                 className="text-gray-700 text-md font-bold"
                 htmlFor="grid-project-name"
-
               >
                 Nombre Proyecto:
               </label>
@@ -105,9 +114,7 @@ const CrearAvances = () => {
                 defaultValue={queryData.Avance._id}
                 name="idProyecto"
                 disabled
-                
               />
-              
             </div>
             <div className="w-full md:mb-0 flex flex-col">
               <label
@@ -139,14 +146,13 @@ const CrearAvances = () => {
                 defaultValue={queryData.Avance.creadoPor.nombre}
                 name="creadoPor"
                 {...register("creadoPor", {
-                  
                   pattern: {
                     value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
                     message: "Valor incorrecto",
                   },
                 })}
               />
-              
+
               {errors.creadoPor?.type === "pattern" && (
                 <span className="text-red-600">"Valores inválidos"</span>
               )}
@@ -186,7 +192,10 @@ const CrearAvances = () => {
               )}
             </div>
             <div className="w-full md:col-start-1 md:col-end-3 flex flex-col ">
-              <label className="text-gray-700 text-md font-bold" htmlFor="grid-obs">
+              <label
+                className="text-gray-700 text-md font-bold"
+                htmlFor="grid-obs"
+              >
                 Observaciones:
               </label>
               <input

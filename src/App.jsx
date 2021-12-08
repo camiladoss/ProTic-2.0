@@ -130,9 +130,13 @@ function App() {
                   path="/Inscripciones/EditarInscripcion/:_id"
                   element={<CrearInscripcion />}
                 />
-                <Route path="/GestionAvances" element={<GestionAvances />} />
+                <Route path="/GestionAvances/:_id" element={<GestionAvances />} />
                 <Route
                   path="/GestionAvances/EditarAvances/:_id"
+                  element={<CrearAvances />}
+                />
+                <Route
+                  path="/GestionAvances/CrearAvances/:_id"
                   element={<CrearAvances />}
                 />
                 <Route path="/Historial" element={<HistorialAvances />} />

@@ -6,10 +6,16 @@ mutation editarAvance($_id: String!, $descripcion: String!, $observaciones: [Str
       _id
       descripcion
       observaciones
-      
     }
   }
-  
-`
-
-export {EDITAR_AVANCE};
+`;
+const CREAR_AVANCE = gql`
+  mutation CrearAvance($descripcion: String!, $creadoPor: String!, $proyecto: String!) {
+    crearAvance(descripcion: $descripcion, creadoPor: $creadoPor, proyecto: $proyecto) {
+      descripcion
+      observaciones
+      fecha
+    }
+  }
+`;
+export {EDITAR_AVANCE, CREAR_AVANCE};

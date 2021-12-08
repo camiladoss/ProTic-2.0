@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useUser } from 'context/userContext'
 import { CREAR_INSCRIPCION } from 'graphql/inscripciones/mutations'
+import PrivateComponent from "components/PrivateComponent";
 
 const GestionProyectos = () => {
   const navigate = useNavigate();
@@ -81,8 +82,10 @@ const GestionProyectos = () => {
                     {p.inscripciones.map(i => i.estudiante._id).includes(obj) ? (
                       null
                     ) : (
-                      <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus" onClick={() => {CrearInscripcion(p._id)}} >
-                      </button>
+                      <PrivateComponent roleList={["ESTUDIANTE", "AUTORIZADO"]}>
+                        <button className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus" onClick={() => {CrearInscripcion(p._id)}} >
+                        </button>
+                      </PrivateComponent>
                     )}
                   </td>
                 </tr>

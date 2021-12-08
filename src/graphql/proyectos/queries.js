@@ -43,6 +43,7 @@ query Proyecto($_id: String!) {
 const GET_MIS_PROYECTOS = gql`
   query MisProyectos {
     MisProyectos {
+      _id
       nombre
       presupuesto
       estado

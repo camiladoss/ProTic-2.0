@@ -20,6 +20,10 @@ const MisProyectos = () => {
   }, [error]);
 
   const { userData } = useUser();
+  useEffect(() => {
+    console.log(userData)
+  },[userData])
+  
   const [inscripcion, { error: mutationError }] = useMutation(
     CREAR_INSCRIPCION,
     { errorPolicy: "all" }

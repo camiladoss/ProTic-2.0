@@ -247,7 +247,7 @@ const EditarUsuario = () => {
               )}
               {errors.identificacion?.type === "pattern" && (
                 <span className="text-red-600">
-                  "La identificación solo puede llevar numeros!"
+                  "La identificación sólo puede llevar números!"
                 </span>
               )}
             </div>

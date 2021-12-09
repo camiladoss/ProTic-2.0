@@ -26,7 +26,10 @@ const CrearInscripcion = () => {
     error: queryError,
     loading: queryLoading,
   } = useQuery(GET_INSCRIPCION, {
+    fetchPolicy: "no-cache",
+    skip: !_id,
     variables: { _id },
+    onCompleted: (data) => reset(data.Inscripcion),
   });
   const [editarInscripcion, { error: mutationError }] =
     useMutation(EDITAR_INSCRIPCION);
@@ -52,6 +55,11 @@ const CrearInscripcion = () => {
     toast.success("Inscripcion modificado con exito");
     navigate("/GestionInscripcion");
   };
+  const options = [
+    { value: "ACEPTADA", label: "ACEPTADA" },
+    { value: "RECHAZADA", label: "RECHAZADA" },
+    { value: "PENDIENTE", label: "PENDIENTE" }
+  ];
 
   if (queryLoading) {
     return <div>Cargando...</div>;
@@ -69,7 +77,7 @@ const CrearInscripcion = () => {
       <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
         Inscripción a proyectos
       </h2>
-      <PrivateRoute roleList={["ADMINISTRADOR", "ESTUDIANTE", "AUTORIZADO"]}>
+      <PrivateRoute roleList={["LIDER", "AUTORIZADO"]}>
         <form className="w-full items-center" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-y-5 gap-x-10 mx-3 mb-6 md:grid-cols-2 items-center">
             <div className="w-full md:mb-0 flex flex-col ">
@@ -86,25 +94,8 @@ const CrearInscripcion = () => {
                 defaultValue={queryData.Inscripcion.proyecto.nombre}
                 placeholder="Nombre del proyecto"
                 name="nombreProyecto"
-                {...register("nombreProyecto", {
-                  required: {
-                    value: true,
-                    massage: "El campo es requerido",
-                  },
-                  pattern: {
-                    value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
-                    massage: "El valor no es correcto",
-                  },
-                })}
+                disabled
               />
-              {errors.nombreProyecto?.type === "required" && (
-                <span className="text-red-600">"El nombre es requerido!"</span>
-              )}
-              {errors.nombreProyecto?.type === "pattern" && (
-                <span className="text-red-600">
-                  "El nombre solo puede llevar letras!"
-                </span>
-              )}
             </div>
             <div className="w-full md:mb-0 flex flex-col">
               <label
@@ -170,25 +161,8 @@ const CrearInscripcion = () => {
                 defaultValue={queryData.Inscripcion.fechaIngreso}
                 name="fechaIngreso"
                 id="dateIn"
-                {...register("fechaIngreso", {
-                  required: {
-                    value: true,
-                    massage: "El campo es requerido",
-                  },
-                  pattern: {
-                    value: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/i,
-                    massage: "El valor no es correcto",
-                  },
-                })}
+                disabled
               />
-              {errors.fechaIngreso?.type === "required" && (
-                <span className="text-red-600">"La fecha es requerida!"</span>
-              )}
-              {errors.fechaIngreso?.type === "pattern" && (
-                <span className="text-red-600">
-                  "La fecha solo puede llevar dd/mm/yyyy!"
-                </span>
-              )}
             </div>
 
             <div className="w-full md:mb-0 flex flex-col">
@@ -204,28 +178,33 @@ const CrearInscripcion = () => {
                 defaultValue={queryData.Inscripcion.fechaEgreso}
                 name="fechaEgreso"
                 id="dateEg"
-                {...register("fechaEgreso", {
-                  required: {
-                    value: true,
-                    massage: "El campo es requerido",
-                  },
-                  pattern: {
-                    value: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/i,
-                    massage: "El valor no es correcto",
-                  },
-                })}
+                disabled
               />
-              {errors.fechaEgreso?.type === "required" && (
-                <span className="text-red-600">"La fecha es requerida!"</span>
-              )}
-              {errors.fechaEgreso?.type === "pattern" && (
-                <span className="text-red-600">
-                  "La fecha solo puede llevar dd/mm/yyyy!"
-                </span>
-              )}
             </div>
+            {_id ? (
+            <div className="w-full mb-6 md:mb-0">
+              <label
+                className="text-gray-700 text-md font-bold"
+                htmlFor="grid-estado"
+              >
+                Fase:
+              </label>
+              <Controller
+                id="grid-estado"
+                control={control}
+                name="estado"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    options={options}
+                    value={options.find((c) => c.value === value)}
+                    onChange={(val) => onChange(val.value)}
+                  />
+                )}
+              />
+            </div>
+          ) : null}
 
-            <div className="w-full  mb-6 md:mb-0">
+            {/* <div className="w-full  mb-6 md:mb-0">
               <label
                 className="text-gray-700 text-md font-bold"
                 htmlFor="grid-state"
@@ -270,7 +249,7 @@ const CrearInscripcion = () => {
                   "El estado no esta disponible!"
                 </span>
               )}
-            </div>
+            </div> */}
           </div>
           <div className="md:col-start-1 md:col-end-3 flex justify-center">
             <button

@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_FILTRARINSCRIPCION } from "graphql/inscripciones/queries";
-import { useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PrivateRoute from "components/PrivateRoute";
 
 const GestionInscripcion = () => {
-  const idProyecto = "61a15557c6e7bb5f2b79f6c3";
   const navigate = useNavigate();
-  const { data, error, loading } = useQuery(GET_FILTRARINSCRIPCION, {
-    variables: { idProyecto },
-  });
+  const { _id } = useParams();
+
+
+  const { data, error, loading } = useQuery(GET_FILTRARINSCRIPCION, {variables:{idProyecto:_id},  fetchPolicy: "no-cache"}
+  );
 
   useEffect(() => {
     console.log("Data servidor", data);
@@ -24,10 +25,10 @@ const GestionInscripcion = () => {
     return <div>Cargando...</div>;
   }
   return (
-    <PrivateRoute roleList={["ADMINISTRADOR", "AUTORIZADO"]}>
+    <PrivateRoute roleList={["LIDER", "AUTORIZADO"]}>
       <div className="flex flex-col items-center w-9/12 m-auto">
         <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
-          Todos los usuarios
+          Usuarios inscritos
         </h2>
         <input
           className="bg-gray-200 text-gray-700 border rounded py-2 px-2 mb-3 focus:outline-none focus:bg-white"

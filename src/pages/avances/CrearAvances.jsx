@@ -177,6 +177,7 @@ const CrearAvances = () => {
                     value: true,
                     message: "Campo requerido",
                   },
+                  disabled: userData.rol === "LIDER",
                   pattern: {
                     value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
                     message: "Valor incorrecto",

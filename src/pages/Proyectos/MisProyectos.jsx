@@ -74,6 +74,10 @@ const MisProyectos = () => {
                         //   navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
                         // }}
                       ></button>
+                      <button
+                      className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-book"
+                      onClick={() => {navigate(`/GestionInscripcion/${p._id}`)}}
+                    ></button>
                     </PrivateComponent>
                     <button
                       className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-eye"

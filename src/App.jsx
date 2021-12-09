@@ -119,9 +119,7 @@ function App() {
                   element={<MisProyectos />}
                 />
                 <Route
-                  path="/GestionInscripcion"
-                  element={<GestionInscripcion />}
-                />
+                  path="/GestionInscripcion/:_id" element={<GestionInscripcion />} />
                 <Route
                   path="/Inscripciones/CrearInscripcion"
                   element={<CrearInscripcion />}

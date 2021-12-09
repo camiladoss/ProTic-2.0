@@ -324,7 +324,7 @@ const EditarUsuario = () => {
                             {errors.estado?.type === 'pattern' && <span className="text-red-600">"El estado no esta disponible!"</span>}
                         </div> */}
             {queryData ? (
-              <div className="w-full mb-6 md:mb-0">
+              <div className="w-full mb-6 md:mb-0 hidden">
                 <label
                   className="text-gray-700 text-md font-bold"
                   htmlFor="grid-rol"

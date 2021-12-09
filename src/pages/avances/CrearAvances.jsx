@@ -25,8 +25,9 @@ const CrearAvances = () => {
     loading: queryLoading,
   } = useQuery(GET_AVANCE, {
     variables: { _id },
-    onCompleted: (data) => reset(data.filtrarAvance),
+    onCompleted: (data) => reset(data.Avance),
   });
+
   const [editarAvance, { error: mutationError }] = useMutation(EDITAR_AVANCE);
 
   const [crearAvance, { error: createError }] = useMutation(CREAR_AVANCE);
@@ -45,19 +46,18 @@ const CrearAvances = () => {
   }, [queryError, mutationError]);
 
   const onSubmit = (data) => {
-    if (queryData.filtrarAvance) {
-      console.log(_id);
+    if (queryData.Avance) {
       editarAvance({
         variables: { _id, ...data },
       });
       toast.success("Avance modificado con exito");
-      navigate("/GestionAvances");
+      navigate(`/GestionAvances/${data.proyecto._id}`);
     } else {
       crearAvance({
         variables: { proyecto: _id, creadoPor: userData._id, ...data },
       });
       toast.success("Avance creado con exito");
-      navigate(`/GestionAvances/${_id}`)
+      navigate(`/GestionAvances/${_id}`);
     }
   };
 
@@ -73,7 +73,7 @@ const CrearAvances = () => {
           <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
         </Link>
       </div>
-      {queryData.filtrarAvance ? (
+      {queryData.Avance ? (
         <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
           Editar Avance
         </h2>
@@ -82,10 +82,10 @@ const CrearAvances = () => {
           Crear de Avance
         </h2>
       )}
-      <PrivateRoute roleList={["ADMINISTRADOR", "ESTUDIANTE", "AUTORIZADO"]}>
+      <PrivateRoute roleList={["LIDER", "ESTUDIANTE", "AUTORIZADO"]}>
         <form className="w-full items-center" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-y-5 gap-x-10 mx-3 mb-6 md:grid-cols-2 items-center">
-            {queryData.filtrarAvance ? (
+            {queryData.Avance ? (
               <div className="w-full md:mb-0 flex flex-col ">
                 <label
                   className="text-gray-700 text-md font-bold"
@@ -103,7 +103,7 @@ const CrearAvances = () => {
                 />
               </div>
             ) : null}
-            {queryData.filtrarAvance ? (
+            {queryData.Avance ? (
               <div className="w-full md:mb-0 flex flex-col">
                 <label
                   className="text-gray-700 text-md font-bold"
@@ -121,7 +121,7 @@ const CrearAvances = () => {
                 />
               </div>
             ) : null}
-            {queryData.filtrarAvance ? (
+            {queryData.Avance ? (
               <div className="w-full md:mb-0 flex flex-col">
                 <label
                   className="text-gray-700 text-md font-bold"
@@ -137,7 +137,7 @@ const CrearAvances = () => {
                 />
               </div>
             ) : null}
-            {queryData.filtrarAvance ? (
+            {queryData.Avance ? (
               <div className="w-full md:mb-0 flex flex-col ">
                 <label
                   className="text-gray-700 text-md font-bold"
@@ -148,23 +148,17 @@ const CrearAvances = () => {
                 <input
                   className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                   id="grid-creadoPor-name"
-                  disable
+                  defaultValue={
+                    queryData.Avance.creadoPor.nombre +
+                    " " +
+                    queryData.Avance.creadoPor.apellido
+                  }
                   type="text"
                   disabled
                   name="creadoPor"
-                  {...register("creadoPor", {
-                    pattern: {
-                      value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
-                      message: "Valor incorrecto",
-                    },
-                  })}
                 />
-                {errors.creadoPor?.type === "pattern" && (
-                  <span className="text-red-600">"Valores inválidos"</span>
-                )}
               </div>
             ) : null}
-
             <div className="w-full md:col-start-1 md:col-end-3 flex flex-col">
               <label
                 className="text-gray-700 text-md font-bold"
@@ -199,7 +193,7 @@ const CrearAvances = () => {
               )}
             </div>
 
-            {queryData.filtrarAvance ? (
+            {queryData.Avance ? (
               <div className="w-full md:col-start-1 md:col-end-3 flex flex-col ">
                 <label
                   className="text-gray-700 text-md font-bold"
@@ -218,15 +212,26 @@ const CrearAvances = () => {
                       value: false,
                       message: "Campo requerido",
                     },
+                    disabled: userData.rol === "ESTUDIANTE",
                     pattern: {
-                      value: /^[A-Za-z]+$/i,
+                      value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
                       message: "Valor incorrecto",
                     },
                   })}
                 />
               </div>
             ) : null}
-            <div className="md:col-start-1 md:col-end-3 flex justify-center">
+            {queryData.Avance ? (
+              <div className="md:col-start-1 md:col-end-3 flex justify-center">
+              <button
+                className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+                type="submit"
+              >
+                Editar
+              </button>
+            </div>
+            ) : (
+              <div className="md:col-start-1 md:col-end-3 flex justify-center">
               <button
                 className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
                 type="submit"
@@ -234,6 +239,7 @@ const CrearAvances = () => {
                 Crear
               </button>
             </div>
+            )}
           </div>
         </form>
       </PrivateRoute>

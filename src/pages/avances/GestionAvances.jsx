@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_FILTRARAVANCES } from "graphql/avances/queries";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PrivateComponent from "components/PrivateComponent";
 
 const GestionAvances = () => {
   const navigate = useNavigate();
@@ -38,11 +39,13 @@ const GestionAvances = () => {
           </Link>
         </div>
         <div className="">
-          <button
-            className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
-            onClick={() => {navigate(`/GestionAvances/CrearAvances/${_id}`)}}>
-                Nuevo Avance
-          </button>
+          <PrivateComponent roleList={["ESTUDIANTE", "AUTORIZADO"]}>
+            <button
+              className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+              onClick={() => {navigate(`/GestionAvances/CrearAvances/${_id}`)}}>
+                  Nuevo Avance
+            </button>
+          </PrivateComponent>
         </div>
       </div>
       <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Avances</h2>

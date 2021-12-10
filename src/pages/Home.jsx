@@ -3,7 +3,7 @@ import Cards from "../components/Cards";
 
 const Home = () => {
   return (
-    <div className="flex flex row flex-wrap justify-center">
+    <div className="flex row flex-wrap justify-center">
       <Cards />
     </div>
   );

@@ -170,14 +170,13 @@ const CrearAvances = () => {
                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-desc"
                 type="text"
-                placeholder="Descripción del avance"
                 name="descripcion"
                 {...register("descripcion", {
                   required: {
                     value: true,
                     message: "Campo requerido",
                   },
-                  disabled: userData.rol === "LIDER",
+                  // disabled: userData.rol === "LIDER",
                   pattern: {
                     value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
                     message: "Valor incorrecto",

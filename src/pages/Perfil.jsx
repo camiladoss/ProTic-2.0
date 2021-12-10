@@ -70,15 +70,15 @@ const Perfil = () => {
       </div>
       <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Perfil</h2>
 
-      <div class="flex items-center">
+      <div className="flex items-center">
         <img
-          class="w-15 h-10 rounded-full mr-4"
+          className="w-15 h-10 rounded-full mr-4"
           src={anuser}
           alt="Avatar of Jonathan Reinink"
         />
-        <div class="text-sm">
-          <p class="text-gray-900 leading-none">{queryData.Usuario.nombre}{" "}{queryData.Usuario.apellido}</p>
-          <p class="text-gray-600">{queryData.Usuario.rol}</p>
+        <div className="text-sm">
+          <p className="text-gray-900 leading-none">{queryData.Usuario.nombre}{" "}{queryData.Usuario.apellido}</p>
+          <p className="text-gray-600">{queryData.Usuario.rol}</p>
         </div>
       </div>
 

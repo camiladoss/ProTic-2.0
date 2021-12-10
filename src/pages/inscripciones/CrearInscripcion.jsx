@@ -27,7 +27,6 @@ const CrearInscripcion = () => {
     loading: queryLoading,
   } = useQuery(GET_INSCRIPCION, {
     fetchPolicy: "no-cache",
-    skip: !_id,
     variables: { _id },
     onCompleted: (data) => reset(data.Inscripcion),
   });
@@ -50,10 +49,10 @@ const CrearInscripcion = () => {
   const onSubmit = (data) => {
     console.log(data);
     editarInscripcion({
-      variables: { _id, ...data },
+      variables: { _id, proyecto:data.proyecto_id, estudiante:data.estudiante._id, estado:data.estado },
     });
     toast.success("Inscripcion modificado con exito");
-    navigate("/GestionInscripcion");
+    navigate(`/GestionInscripcion/${data.proyecto._id}`);
   };
   const options = [
     { value: "ACEPTADA", label: "ACEPTADA" },
@@ -68,8 +67,7 @@ const CrearInscripcion = () => {
   return (
     <div className="flex flex-col items-center w-9/12 m-auto">
       <div className="flex self-start">
-        <button className="">
-          <Link to="/GestionProyectos"></Link>
+        <button className="" onClick={() => {navigate(`/GestionInscripcion/${queryData.Inscripcion.proyecto._id}`)}}>
           <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
         </button>
       </div>
@@ -95,6 +93,7 @@ const CrearInscripcion = () => {
                 placeholder="Nombre del proyecto"
                 name="nombreProyecto"
                 disabled
+                register
               />
             </div>
             <div className="w-full md:mb-0 flex flex-col">
@@ -156,12 +155,22 @@ const CrearInscripcion = () => {
                 Fecha de ingreso:
               </label>
               <input
-                type="date"
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                type="text"
                 placeholder="Fecha de ingreso"
-                defaultValue={queryData.Inscripcion.fechaIngreso}
                 name="fechaIngreso"
                 id="dateIn"
                 disabled
+                {...register("fechaIngreso", {
+                required: {
+                  value: true,
+                  message: "El campo es requerido",
+                },
+                pattern: {
+                  value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
+                  message: "El valor no es correcto",
+                },
+              })}
               />
             </div>
 
@@ -173,7 +182,8 @@ const CrearInscripcion = () => {
                 Fecha de egreso:
               </label>
               <input
-                type="date"
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                type="text"
                 placeholder="Fecha de Egreso "
                 defaultValue={queryData.Inscripcion.fechaEgreso}
                 name="fechaEgreso"
@@ -181,13 +191,13 @@ const CrearInscripcion = () => {
                 disabled
               />
             </div>
-            {_id ? (
+            {queryData ? (
             <div className="w-full mb-6 md:mb-0">
               <label
                 className="text-gray-700 text-md font-bold"
                 htmlFor="grid-estado"
               >
-                Fase:
+                Estado:
               </label>
               <Controller
                 id="grid-estado"
@@ -203,53 +213,6 @@ const CrearInscripcion = () => {
               />
             </div>
           ) : null}
-
-            {/* <div className="w-full  mb-6 md:mb-0">
-              <label
-                className="text-gray-700 text-md font-bold"
-                htmlFor="grid-state"
-              >
-                Estado:
-              </label>
-              <div className="relative">
-                <select
-                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-state"
-                  defaultValue={queryData.Inscripcion.estado}
-                  name="estado"
-                  {...register("estado", {
-                    required: {
-                      value: true,
-                      massage: "El campo es requerido",
-                    },
-                    pattern: {
-                      value: /^[A-Za-z]+$/i,
-                      massage: "El valor no es correcto",
-                    },
-                  })}
-                >
-                  <option>ACEPTADA</option>
-                  <option>RECHAZADA</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
-              {errors.estado?.type === "required" && (
-                <span className="text-red-600">"La estado es requerido!"</span>
-              )}
-              {errors.estado?.type === "pattern" && (
-                <span className="text-red-600">
-                  "El estado no esta disponible!"
-                </span>
-              )}
-            </div> */}
           </div>
           <div className="md:col-start-1 md:col-end-3 flex justify-center">
             <button

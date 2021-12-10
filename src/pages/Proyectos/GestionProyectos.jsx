@@ -75,10 +75,12 @@ const GestionProyectos = () => {
             <th className="px-6 py-2 text-md text-gray-700">Líder</th>
             <th className="px-6 py-2 text-md text-gray-700">Estado </th>
             <th className="px-6 py-2 text-md text-gray-700">Fase </th>
-            {userData.rol === "LIDER" ? (
+            {userData.rol === "ADMINISTRADOR" ? (
               <th className="px-6 py-2 text-md text-gray-700">Editar</th>
             ) : (
-              <th className="px-6 py-2 text-md text-gray-700">Inscribirse</th>
+              <PrivateComponent roleList={["ESTUDIANTE", "AUTORIZADO"]}>
+                <th className="px-6 py-2 text-md text-gray-700">Inscribirse</th>
+              </PrivateComponent>
             )}
           </tr>
         </thead>
@@ -97,28 +99,38 @@ const GestionProyectos = () => {
                     {p.estado}
                   </td>
                   <td className="px-6 py-4 text-md text-gray-600">{p.fase}</td>
-                  <td className="px-6 py-4 text-md text-gray-600">
-                    <PrivateComponent roleList={["LIDER", "AUTORIZADO"]}>
-                      <button
-                        className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
-                        onClick={() => {
-                          navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
-                        }}
-                      ></button>
-                    </PrivateComponent>
-                    {p.inscripciones
-                      .map((i) => i.estudiante._id)
-                      .includes(obj) ? null : (
-                      <PrivateComponent roleList={["ESTUDIANTE", "AUTORIZADO"]}>
+                  <PrivateComponent
+                    roleList={["ESTUDIANTE", "ADMINISTRADOR", "AUTORIZADO"]}
+                  >
+                    <td className="px-6 py-4 text-md text-gray-600">
+                      {p.inscripciones
+                        .map((i) => i.estudiante._id)
+                        .includes(obj) ? null : (
+                        <PrivateComponent
+                          roleList={["ESTUDIANTE", "AUTORIZADO"]}
+                        >
+                          <button
+                            className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus"
+                            onClick={() => {
+                              CrearInscripcion(p._id);
+                            }}
+                          ></button>
+                        </PrivateComponent>
+                      )}
+                      <PrivateComponent
+                        roleList={["ADMINISTRADOR", "AUTORIZADO"]}
+                      >
                         <button
-                          className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus"
+                          className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
                           onClick={() => {
-                            CrearInscripcion(p._id);
+                            navigate(
+                              `/GestionProyectos/EditarProyecto/${p._id}`
+                            );
                           }}
                         ></button>
                       </PrivateComponent>
-                    )}
-                  </td>
+                    </td>
+                  </PrivateComponent>
                 </tr>
               );
             })}

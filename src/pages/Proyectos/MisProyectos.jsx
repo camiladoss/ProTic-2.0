@@ -8,7 +8,9 @@ import { useUser } from "context/userContext";
 
 const MisProyectos = () => {
   const navigate = useNavigate();
-  const { data, error, loading } = useQuery(GET_MIS_PROYECTOS);
+  const { data, error, loading } = useQuery(GET_MIS_PROYECTOS,{
+    fetchPolicy: "no-cache",
+  });
   const { userData } = useUser();
 
   useEffect(() => {
@@ -70,9 +72,9 @@ const MisProyectos = () => {
                     <PrivateComponent roleList={["LIDER", "AUTORIZADO"]}>
                       <button
                         className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
-                        // onClick={() => {
-                        //   navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
-                        // }}
+                        onClick={() => {
+                          navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
+                        }}
                       ></button>
                       <button
                       className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-book"

@@ -38,5 +38,17 @@ const GET_FILTRARINSCRIPCION = gql`
     }
   }
 `;
+const GET_FILTRARESTUDIANTE = gql`
+  query FiltrarEstudiate($estudiante: String!) {
+    filtrarEstudiate(estudiante: $estudiante) {
+      fechaEgreso
+      proyecto {
+        _id
+      }
+      _id
+    }
+  }
+`
 
-export { GET_INSCRIPCION, GET_FILTRARINSCRIPCION };
+
+export { GET_INSCRIPCION, GET_FILTRARINSCRIPCION, GET_FILTRARESTUDIANTE };

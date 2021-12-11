@@ -105,7 +105,7 @@ const GestionProyectos = () => {
                     <td className="px-6 py-4 text-md text-gray-600">
                       {p.inscripciones
                         .map((i) => i.estudiante._id)
-                        .includes(obj) ? null : (
+                        .includes(obj) || (p.estado === "INACTIVO" || p.fase === 'TERMINADO') ? null : (
                         <PrivateComponent
                           roleList={["ESTUDIANTE", "AUTORIZADO"]}
                         >

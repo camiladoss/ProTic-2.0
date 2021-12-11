@@ -29,6 +29,8 @@ query Proyecto($_id: String!) {
     fase
     lider {
       _id
+      nombre
+      apellido
     }
     objetivoGeneral
     objetivos {

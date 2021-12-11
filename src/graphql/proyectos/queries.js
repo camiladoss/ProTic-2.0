@@ -36,6 +36,8 @@ query Proyecto($_id: String!) {
     objetivos {
       descripcion
     }
+    fechaInicio
+    fechaFin
   }
 }
 `;

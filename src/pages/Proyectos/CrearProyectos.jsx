@@ -25,8 +25,8 @@ const CrearProyecto = () => {
   const { _id } = useParams();
   const [obj, setObj] = useState([]);
   const [objetivos, setObjetivos] = useState([]);
-  const [fechaInit, setFechaInit] = useState();
-  const [fechaFin, setFechaFin] = useState();
+  // const [fechaInit, setFechaInit] = useState();
+  // const [fechaFin, setFechaFin] = useState();
   var listaOptions = [];
 
   const {
@@ -55,7 +55,6 @@ const CrearProyecto = () => {
   const [fechaEgreso, { error: mutationInscripcionError }] =
     useMutation(FECHA_EGRESO);
 
-
   useEffect(() => {
     console.log("Data servidor", queryData);
     if (queryData) {
@@ -65,14 +64,14 @@ const CrearProyecto = () => {
         })
       );
     }
-    if (queryData) {
-      setFechaInit(
-        moment(queryData.Proyecto.fechaInicio).utc().format("YYYY-MM-DD")
-      );
-      setFechaFin(
-        moment(queryData.Proyecto.fechaFin).utc().format("YYYY-MM-DD")
-      );
-    }
+    // if (queryData.Proyecto) {
+    //   setFechaInit(
+    //     moment(queryData.Proyecto.fechaInicio).utc().format("YYYY-MM-DD")
+    //   );
+    //   setFechaFin(
+    //     moment(queryData.Proyecto.fechaFin).utc().format("YYYY-MM-DD")
+    //   );
+    // }
   }, [queryData]);
 
   useEffect(() => {
@@ -130,30 +129,52 @@ const CrearProyecto = () => {
   const onSubmit = (data) => {
     console.log(data);
     if (_id) {
-      editarProyecto({
-        variables: {
-          _id,
-          nombre: data.nombre,
-          presupuesto: data.presupuesto,
-          estado: data.estado,
-          objetivos: objetivos,
-          fase: data.fase,
-          lider: data.lider._id,
-          objetivoGeneral: data.objetivoGeneral,
-          fechaInicio: fechaInit,
-          fechaFin: fechaFin,
-        },
-      });
-      if(data.estado === "INACTIVO" || data.fase === "TERMINADO"){
-        fechaEgreso({
-          variables: {
-            idProyecto:_id
-          }
-        })
-        console.log(data.estado);
+      if(queryData.Proyecto.fase=== "TERMINADO"){
+        toast.error("El proyecto está terminado");
+      }else{
+        if (data.fase === "NULO" && data.estado === "ACTIVO") {
+          editarProyecto({
+            variables: {
+              _id,
+              estado: data.estado,
+              fase: "INICIADO",
+              fechaInicio: Date.now(),
+            },
+          });
+        } else if (data.fase === "TERMINADO" && data.estado === "ACTIVO") {
+          editarProyecto({
+            variables: {
+              _id,
+              estado: "INACTIVO",
+              fase: data.fase,
+              fechaFin: Date.now(),
+            },
+          });
+        } else {
+          editarProyecto({
+            variables: {
+              _id,
+              nombre: data.nombre,
+              presupuesto: data.presupuesto,
+              estado: data.estado,
+              objetivos: objetivos,
+              fase: data.fase,
+              lider: data.lider._id,
+              objetivoGeneral: data.objetivoGeneral,
+            },
+          });
+        }
+        if (data.estado === "INACTIVO" || data.fase === "TERMINADO") {
+          fechaEgreso({
+            variables: {
+              idProyecto: _id,
+            },
+          });
+          console.log(data.estado);
+        }
+        toast.success("Proyecto editado con exito");
+        navigate("/GestionProyectos");
       }
-      toast.success("Proyecto editado con exito");
-      navigate("/GestionProyectos");
     } else {
       console.log(data);
       crearProyecto({
@@ -264,14 +285,12 @@ const CrearProyecto = () => {
               Fecha de inicio:
             </label>
             <input
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-initDate"
-              type="date"
+              type="text"
               placeholder="Fecha de inicio"
               name="fechaInicio"
-              defaultValue={fechaInit}
-              onChange={(e) => {
-                setFechaInit(e.target.value);
-              }}
+              defaultValue={queryData ?  moment(queryData.Proyecto.fechaInicio).utc().format("YYYY-MM-DD") : null}
               disabled
             />
           </div>
@@ -283,14 +302,12 @@ const CrearProyecto = () => {
               Fecha de terminación:
             </label>
             <input
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-FinDate"
-              type="date"
+              type="text"
               placeholder="Fecha de terminación"
               name="fechaFin"
-              defaultValue={fechaFin}
-              onChange={(e) => {
-                setFechaFin(e.target.value);
-              }}
+              defaultValue={queryData ? moment(queryData.Proyecto.fechaFin).utc().format("YYYY-MM-DD") : null}
               disabled
             />
           </div>
@@ -342,7 +359,7 @@ const CrearProyecto = () => {
               />
             </div>
           ) : null}
-          {dataEstudiante && !_id  ? (
+          {dataEstudiante && !_id ? (
             <div className="w-full mb-6 md:mb-0">
               <label
                 className="text-gray-700 text-md font-bold"
@@ -365,23 +382,23 @@ const CrearProyecto = () => {
             </div>
           ) : null}
           {queryData ? (
-          <div className="w-full md:mb-0 flex flex-col">
-            <label
-              className="text-gray-700 text-md font-bold"
-              htmlFor="grid-FinDate"
-            >
-              Lider:
-            </label>
-            <input
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              defaultValue={queryData.Proyecto.lider.nombre + " " +
-                    queryData.Proyecto.lider.apellido}
-              onChange={(e) => {
-                setFechaFin(e.target.value);
-              }}
-              disabled
-            />
-          </div>
+            <div className="w-full md:mb-0 flex flex-col">
+              <label
+                className="text-gray-700 text-md font-bold"
+                htmlFor="grid-FinDate"
+              >
+                Lider:
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                defaultValue={
+                  queryData.Proyecto.lider.nombre +
+                  " " +
+                  queryData.Proyecto.lider.apellido
+                }
+                disabled
+              />
+            </div>
           ) : null}
           <div className="w-full md:mb-0 flex flex-col ">
             <label

@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_MIS_PROYECTOS } from "graphql/proyectos/queries";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PrivateComponent from "components/PrivateComponent";
 import { useUser } from "context/userContext";
-import { CREAR_INSCRIPCION } from "graphql/inscripciones/mutations";
 
 const MisProyectos = () => {
   const navigate = useNavigate();
-  const { data, error, loading } = useQuery(GET_MIS_PROYECTOS);
+  const { data, error, loading } = useQuery(GET_MIS_PROYECTOS,{
+    fetchPolicy: "no-cache",
+  });
+  const { userData } = useUser();
 
   useEffect(() => {
     console.log("Data servidor", data);
@@ -19,27 +21,13 @@ const MisProyectos = () => {
     if (error) toast.error("Error consultado proyectos");
   }, [error]);
 
-  const { userData } = useUser();
-  const [inscripcion, { error: mutationError }] = useMutation(
-    CREAR_INSCRIPCION,
-    { errorPolicy: "all" }
-  );
   useEffect(() => {
     if (error) {
       toast.error("Error consultado usuarios");
     }
-    if (mutationError) {
-      toast.error("Error modificado el usuario");
-    }
-  }, [error, mutationError]);
 
-  const CrearInscripcion = (proyecto) => {
-    // inscripcion({
-    //   variables: { estudiante: userData._id, proyecto: proyecto },
-    // });
-    // toast.success("Inscripción realizada con éxito");
-    // window.location.reload(false);
-  };
+  }, [error]);
+
 
   if (loading) {
     return <div>Cargando...</div>;
@@ -60,7 +48,11 @@ const MisProyectos = () => {
             <th className="px-6 py-2 text-md text-gray-700">Presupuesto</th>
             <th className="px-6 py-2 text-md text-gray-700">Estado </th>
             <th className="px-6 py-2 text-md text-gray-700">Fase </th>
-            <th className="px-6 py-2 text-md text-gray-700">Editar</th>
+            {userData.rol === "LIDER" ? (
+              <th className="px-6 py-2 text-md text-gray-700">Editar</th>
+            ) : (
+              <th className="px-6 py-2 text-md text-gray-700">Ver Avances</th>
+            )}
           </tr>
         </thead>
         <tbody className="bg-columbiaBlue">
@@ -77,17 +69,21 @@ const MisProyectos = () => {
                   </td>
                   <td className="px-6 py-4 text-md text-gray-600">{p.fase}</td>
                   <td className="px-6 py-4 text-md text-gray-600">
-                    <button
-                      className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
-                      onClick={() => {
-                        navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
-                      }}
+                    <PrivateComponent roleList={["LIDER", "AUTORIZADO"]}>
+                      <button
+                        className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
+                        onClick={() => {
+                          navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
+                        }}
+                      ></button>
+                      <button
+                      className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-book"
+                      onClick={() => {navigate(`/GestionInscripcion/${p._id}`)}}
                     ></button>
+                    </PrivateComponent>
                     <button
-                      className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-plus"
-                      onClick={() => {
-                        CrearInscripcion(p._id);
-                      }}
+                      className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-eye"
+                      onClick={() => {navigate(`/GestionAvances/${p._id}`)}}
                     ></button>
                   </td>
                 </tr>

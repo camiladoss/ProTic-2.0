@@ -130,6 +130,7 @@ const CrearProyecto = () => {
       });
       toast.success("Proyecto editado con exito");
       navigate("/GestionProyectos");
+      window.location.reload(false);
     }
   };
 

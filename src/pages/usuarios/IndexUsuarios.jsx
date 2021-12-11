@@ -21,7 +21,7 @@ const IndexUsuarios = () => {
 
     if (loading) { return <div>Cargando...</div>; }
     return (
-        <PrivateRoute roleList={['ADMINISTRADOR', 'AUTORIZADO']}>
+        <PrivateRoute roleList={['ADMINISTRADOR',"LIDER",'AUTORIZADO']}>
             <div className="flex flex-col items-center w-9/12 m-auto">
                 <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Todos los usuarios</h2>
                 <input  className="bg-gray-200 text-gray-700 border rounded py-2 px-2 mb-3 focus:outline-none focus:bg-white"

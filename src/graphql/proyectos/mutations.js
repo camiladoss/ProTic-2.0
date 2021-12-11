@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client'
 
 const CREAR_PROYECTO = gql`
-mutation CrearProyecto($nombre: String!, $presupuesto: String!, $fechaInicio: Date!, $lider: String!, $objetivoGeneral: String!, $objetivos: [crearObjetivo]!) {
+mutation CrearProyecto($nombre: String!, $presupuesto: String!, $fechaInicio: Date, $lider: String!, $objetivoGeneral: String!, $objetivos: [crearObjetivo]!) {
   crearProyecto(nombre: $nombre, presupuesto: $presupuesto, fechaInicio: $fechaInicio, lider: $lider, objetivoGeneral: $objetivoGeneral, objetivos: $objetivos) {
     nombre
     presupuesto
-    fechaInicio
     estado
     fase
   }

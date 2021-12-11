@@ -25,8 +25,6 @@ query Proyecto($_id: String!) {
   Proyecto(_id: $_id) {
     nombre
     presupuesto
-    fechaInicio
-    fechaFin
     estado
     fase
     lider {
@@ -43,6 +41,7 @@ query Proyecto($_id: String!) {
 const GET_MIS_PROYECTOS = gql`
   query MisProyectos {
     MisProyectos {
+      _id
       nombre
       presupuesto
       estado

@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_USUARIO, GET_ESTUDIANTES } from "graphql/usuarios/queries";
 import { toast } from "react-toastify";
-// import useFormData from 'hooks/useFormData';
 import { EDITAR_USUARIO } from "graphql/usuarios/mutations";
 import { Controller, useForm } from "react-hook-form";
 import PrivateRoute from "components/PrivateRoute";
@@ -47,9 +46,10 @@ const EditarUsuario = () => {
     if (queryError) {
       toast.error("Error consultado usuarios");
     }
-    if (mutationError) {
+    if (mutationError || errorEstudiante) {
       toast.error("Error modificado el usuario");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryError, mutationError]);
 
   const onSubmit = (data) => {
@@ -70,13 +70,7 @@ const EditarUsuario = () => {
     { value: "LIDER", label: "LIDER" },
     { value: "ADMINISTRADOR", label: "ADMINISTRADOR" },
   ];
-  var estudianteOpciones = [];
 
-  if (dataEstudiante) {
-    estudianteOpciones = dataEstudiante.Estudiantes.map((e) => {
-      return { value: e._id, label: e.nombre + " " + e.apellido };
-    });
-  }
   if (queryLoading || LoadingEstudiante) {
     return <div>Cargando...</div>;
   }
@@ -98,7 +92,7 @@ const EditarUsuario = () => {
           Crear Usuario
         </h2>
       )}
-      <PrivateRoute roleList={["ADMINISTRADOR", "AUTORIZADO"]}>
+      <PrivateRoute roleList={["ADMINISTRADOR", "LIDER", "AUTORIZADO"]}>
         <form className="w-full items-center" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-y-5 gap-x-10 mx-3 mb-6 md:grid-cols-2 items-center">
             <div className="w-full md:mb-0 flex flex-col ">
@@ -113,6 +107,7 @@ const EditarUsuario = () => {
                 id="grid-user-name"
                 type="text"
                 name="nombre"
+                disabled
                 {...register("nombre", {
                   required: {
                     value: true,
@@ -145,6 +140,7 @@ const EditarUsuario = () => {
                 id="grid-user-lastname"
                 type="text"
                 name="apellido"
+                disabled
                 {...register("apellido", {
                   required: {
                     value: true,
@@ -197,6 +193,7 @@ const EditarUsuario = () => {
                 id="grid-user-email"
                 type="text"
                 name="correo"
+                disabled
                 {...register("correo", {
                   required: {
                     value: true,
@@ -229,6 +226,7 @@ const EditarUsuario = () => {
                 id="grid-user-Id"
                 type="text"
                 name="identificacion"
+                disabled
                 {...register("identificacion", {
                   required: {
                     value: true,
@@ -247,84 +245,12 @@ const EditarUsuario = () => {
               )}
               {errors.identificacion?.type === "pattern" && (
                 <span className="text-red-600">
-                  "La identificación solo puede llevar numeros!"
+                  "La identificación sólo puede llevar números!"
                 </span>
               )}
             </div>
-            {/* <div className="w-full mb-6 md:mb-0" >
-                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-rol">Rol:</label>
-                            <div className="relative">
-                                <select
-                                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="grid-rol"
-                                defaultValue={queryData.Usuario.rol}
-                                name="rol"
-                                {...register("rol",{
-                                    required: {
-                                        value:true,
-                                        massage: "El campo es requerido"
-                                    },
-                                    pattern: {
-                                        value: /^[A-Za-z]+$/i,
-                                        massage: "El valor no es correcto",
-                                    }
-                                })}
-                                >
-                                    <option>ESTUDIANTE</option>
-                                    <option>LIDER</option>
-                                    <option>ADMINISTRADOR</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg
-                                        className="fill-current h-4 w-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            {errors.rol?.type === 'required' && <span className="text-red-600">"El rol es requerido!"</span>}
-                            {errors.rol?.type === 'pattern' && <span className="text-red-600">"El rol no esta disponible!"</span>}
-                        </div> */}
-            {/* <div className="w-full mb-6 md:mb-0" >
-                            <label className="text-gray-700 text-md font-bold" htmlFor="grid-estado">Estado:</label>
-                            <div className="relative">
-                                <select
-                                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="grid-estado"
-                                defaultValue={queryData.Usuario.estado}
-                                name="estado"
-                                {...register("estado",{
-                                    required: {
-                                        value:true,
-                                        massage: "El campo es requerido"
-                                    },
-                                    pattern: {
-                                        value: /^[A-Za-z]+$/i,
-                                        massage: "El valor no es correcto",
-                                    }
-                                })}
-                                >
-                                    <option>AUTORIZADO</option>
-                                    <option>PENDIENTE</option>
-                                    <option>NO_AUTORIZADO</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg
-                                        className="fill-current h-4 w-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            {errors.estado?.type === 'required' && <span className="text-red-600">"La estado es requerido!"</span>}
-                            {errors.estado?.type === 'pattern' && <span className="text-red-600">"El estado no esta disponible!"</span>}
-                        </div> */}
             {queryData ? (
-              <div className="w-full mb-6 md:mb-0">
+              <div className="w-full mb-6 md:mb-0 hidden">
                 <label
                   className="text-gray-700 text-md font-bold"
                   htmlFor="grid-rol"
@@ -361,32 +287,8 @@ const EditarUsuario = () => {
                   name="estado"
                   render={({ field: { onChange, value } }) => (
                     <Select
-                      // defaultValue={options.find(c => c.value === dataUsuario.estado)}
                       options={options}
                       value={options.find((c) => c.value === value)}
-                      onChange={(val) => onChange(val.value)}
-                    />
-                  )}
-                />
-              </div>
-            ) : null}
-            {dataEstudiante && _id ? (
-              <div className="w-full mb-6 md:mb-0">
-                <label
-                  className="text-gray-700 text-md font-bold"
-                  htmlFor="grid-estudiantes"
-                >
-                  Estudiantes:
-                </label>
-                <Controller
-                  id="grid-estudiantes"
-                  control={control}
-                  name="estudiantes"
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      // defaultValue={options3.find(c => c.value === queryData.Usuario.estado)}
-                      options={estudianteOpciones}
-                      value={estudianteOpciones.find((c) => c.value === value)}
                       onChange={(val) => onChange(val.value)}
                     />
                   )}

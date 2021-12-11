@@ -119,9 +119,7 @@ function App() {
                   element={<MisProyectos />}
                 />
                 <Route
-                  path="/GestionInscripcion"
-                  element={<GestionInscripcion />}
-                />
+                  path="/GestionInscripcion/:_id" element={<GestionInscripcion />} />
                 <Route
                   path="/Inscripciones/CrearInscripcion"
                   element={<CrearInscripcion />}
@@ -130,9 +128,13 @@ function App() {
                   path="/Inscripciones/EditarInscripcion/:_id"
                   element={<CrearInscripcion />}
                 />
-                <Route path="/GestionAvances" element={<GestionAvances />} />
+                <Route path="/GestionAvances/:_id" element={<GestionAvances />} />
                 <Route
                   path="/GestionAvances/EditarAvances/:_id"
+                  element={<CrearAvances />}
+                />
+                <Route
+                  path="/GestionAvances/CrearAvances/:_id"
                   element={<CrearAvances />}
                 />
                 <Route path="/Historial" element={<HistorialAvances />} />

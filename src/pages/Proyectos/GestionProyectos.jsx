@@ -23,7 +23,7 @@ const GestionProyectos = () => {
   }, [error]);
 
   const { userData } = useUser();
-  const [inscripcion, { error: mutationError }] = useMutation(
+  const [inscripcion, {data:mutationData, error: mutationError }] = useMutation(
     CREAR_INSCRIPCION,
     { errorPolicy: "all" }
   );
@@ -31,22 +31,25 @@ const GestionProyectos = () => {
     if (error) {
       toast.error("Error consultado usuarios");
     }
-    if (mutationError) {
-      toast.error("Error modificado el usuario");
-    }
   }, [error, mutationError]);
 
+  useEffect(() => {
+    if (mutationData) {
+      if(mutationData.crearInscripcion === null){
+        toast.error("Ya te encuentras inscrito en el proyecto");
+        console.log(mutationData);
+    }else if (mutationData.crearInscripcion !== null){
+        toast.success("Inscripción realizada con éxito");
+        console.log(mutationData.crearInscripcion);
+      }
+    }
+  }, [mutationData]);
+
   const CrearInscripcion = (proyecto) => {
-    console.log(userData._id);
-    console.log(data.Proyectos);
     inscripcion({
       variables: { estudiante: userData._id, proyecto: proyecto },
     });
-    toast.success("Inscripción realizada con éxito");
-    window.location.reload(false);
   };
-
-  const obj = userData._id;
 
   if (loading) {
     return <div>Cargando...</div>;
@@ -103,7 +106,8 @@ const GestionProyectos = () => {
                     roleList={["ESTUDIANTE", "ADMINISTRADOR", "AUTORIZADO"]}
                   >
                     <td className="px-6 py-4 text-md text-gray-600">
-                      {(p.estado === "INACTIVO" || p.fase === 'TERMINADO') || p.inscripciones.map((i) => i.estudiante._id).includes(obj)
+                      {(p.estado === "INACTIVO" || p.fase === 'TERMINADO')
+                      //|| p.inscripciones.map((i) => i.estudiante._id).includes(obj)
                       /* && p.inscripciones.fechaEgreso === null) */
                      ? null : (
                         <PrivateComponent

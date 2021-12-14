@@ -71,12 +71,21 @@ const MisProyectos = () => {
                   <td className="px-6 py-4 text-md text-gray-600">{p.fase}</td>
                   <td className="px-6 py-4 text-md text-gray-600">
                     <PrivateComponent roleList={["LIDER", "AUTORIZADO"]}>
-                      <button
-                        className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
-                        onClick={() => {
-                          navigate(`/GestionProyectos/EditarProyecto/${p._id}`);
-                        }}
-                      ></button>
+                      {p.estado !== "INACTIVO" ? (
+                        <button
+                          className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
+                          onClick={() => {
+                            navigate(
+                              `/GestionProyectos/EditarProyecto/${p._id}`
+                            );
+                          }}
+                        ></button>
+                      ) :(
+                        <button
+                          className="px-4 py-1 text-md mr-2 text-white bg-green-900 rounded fas fa-pen"
+                          disabled
+                        ></button>
+                      )}
                       <button
                         className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-book"
                         onClick={() => {

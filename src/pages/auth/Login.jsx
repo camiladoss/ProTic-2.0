@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from '@apollo/client'
 import { LOGIN } from 'graphql/auth/mutations';
 import { useAuth } from 'context/authContext';
+import { toast } from "react-toastify";
 
 const Login = () => {
     const { setToken } = useAuth();
@@ -13,26 +14,26 @@ const Login = () => {
 
     useEffect(() => {
         if(mutationError){
-            // toast.error('Error modificado el usuario')
+            toast.error('Usuario o contraseña incorrectos')
             console.log(mutationError);
         }
     }, [mutationError]);
 
     const onSubmit = data =>{
-        console.log(data);
         login({
               variables:{...data}
         });
-        // toast.success('Usuario modificado con exito');
-        // navigate("/Usuarios");
     }
     useEffect(()=>{
-        console.log(dataMutation);
         if (dataMutation){
-            if (dataMutation.login.token){
+            if (dataMutation.login.token === null){
+                console.log('error');
+                toast.warning('Usuario o contraseña incorrectos');
+            }else{
                 setToken(dataMutation.login.token);
                 navigate('/home')
             }
+
         }
     }, [dataMutation, setToken, navigate])
 

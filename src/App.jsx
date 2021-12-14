@@ -31,7 +31,7 @@ import { setContext } from "@apollo/client/link/context";
 import jwt_decode from "jwt-decode";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: "https://protic2back.herokuapp.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

@@ -15,6 +15,7 @@ const Navbar = () => {
 
   const deleteToken = () => {
     setToken(null);
+    window.location.reload(false);
     navigate("/");
   };
   return (

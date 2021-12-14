@@ -8,7 +8,7 @@ import { useUser } from "context/userContext";
 
 const MisProyectos = () => {
   const navigate = useNavigate();
-  const { data, error, loading } = useQuery(GET_MIS_PROYECTOS,{
+  const { data, error, loading } = useQuery(GET_MIS_PROYECTOS, {
     fetchPolicy: "no-cache",
   });
   const { userData } = useUser();
@@ -25,9 +25,7 @@ const MisProyectos = () => {
     if (error) {
       toast.error("Error consultado usuarios");
     }
-
   }, [error]);
-
 
   if (loading) {
     return <div>Cargando...</div>;
@@ -63,7 +61,10 @@ const MisProyectos = () => {
                   <td className="px-6 py-4 text-md text-gray-600">
                     {p.nombre}
                   </td>
-                  <td className="px-6 py-4 text-md text-gray-600"> $ {p.presupuesto}</td>
+                  <td className="px-6 py-4 text-md text-gray-600">
+                    {" "}
+                    $ {p.presupuesto}
+                  </td>
                   <td className="px-6 py-4 text-md text-gray-600">
                     {p.estado}
                   </td>
@@ -77,13 +78,17 @@ const MisProyectos = () => {
                         }}
                       ></button>
                       <button
-                      className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-book"
-                      onClick={() => {navigate(`/GestionInscripcion/${p._id}`)}}
-                    ></button>
+                        className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-book"
+                        onClick={() => {
+                          navigate(`/GestionInscripcion/${p._id}`);
+                        }}
+                      ></button>
                     </PrivateComponent>
                     <button
                       className="px-4 py-1 text-md ml-2 text-white bg-blue-400 rounded fas fa-eye"
-                      onClick={() => {navigate(`/GestionAvances/${p._id}`)}}
+                      onClick={() => {
+                        navigate(`/GestionAvances/${p._id}`);
+                      }}
                     ></button>
                   </td>
                 </tr>

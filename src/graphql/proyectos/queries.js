@@ -12,6 +12,7 @@ const GET_PROYECTOS = gql`
         apellido
       }
       inscripciones {
+        fechaEgreso
         estudiante {
           _id
         }
@@ -29,11 +30,15 @@ query Proyecto($_id: String!) {
     fase
     lider {
       _id
+      nombre
+      apellido
     }
     objetivoGeneral
     objetivos {
       descripcion
     }
+    fechaInicio
+    fechaFin
   }
 }
 `;

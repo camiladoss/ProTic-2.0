@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AVANCE } from "graphql/avances/queries";
+import { GET_PROYECTO } from "graphql/proyectos/queries";
 import { toast } from "react-toastify";
 import { EDITAR_AVANCE, CREAR_AVANCE } from "graphql/avances/mutations";
 import { useForm } from "react-hook-form";
 import PrivateRoute from "components/PrivateRoute";
 import { useUser } from "context/userContext";
+import { EDITAR_PROYECTO } from "graphql/proyectos/mutations";
 
 const CrearAvances = () => {
   const navigate = useNavigate();
@@ -24,13 +26,23 @@ const CrearAvances = () => {
     error: queryError,
     loading: queryLoading,
   } = useQuery(GET_AVANCE, {
+    skip: !_id,
     variables: { _id },
     onCompleted: (data) => reset(data.Avance),
+  });
+
+  const {
+    data: proyectoData,
+    error: proyectoError,
+  } = useQuery(GET_PROYECTO, {
+    variables: { _id },
   });
 
   const [editarAvance, { error: mutationError }] = useMutation(EDITAR_AVANCE);
 
   const [crearAvance, { error: createError }] = useMutation(CREAR_AVANCE);
+
+  const [editarProyecto, { error: proyecError }] = useMutation(EDITAR_PROYECTO);
 
   useEffect(() => {
     console.log("Data servidor", queryData);
@@ -56,6 +68,11 @@ const CrearAvances = () => {
       crearAvance({
         variables: { proyecto: _id, creadoPor: userData._id, ...data },
       });
+      if(proyectoData.Proyecto.fase === "INICIADO"){
+        editarProyecto({
+          variables: { _id, fase: "DESARROLLO"},
+        })
+      }
       toast.success("Avance creado con exito");
       navigate(`/GestionAvances/${_id}`);
     }
@@ -68,10 +85,15 @@ const CrearAvances = () => {
   return (
     <div className="flex flex-col items-center w-9/12 m-auto">
       <div className="flex self-start">
-        <Link to="/GestionAvances">
-          {" "}
+      {queryData.Avance?(
+        <button onClick={()=>navigate(`/GestionAvances/${queryData.Avance.proyecto._id}`)}>
           <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
-        </Link>
+        </button>
+      ):(
+        <button onClick={()=>navigate(`/GestionAvances/${_id}`)}>
+          <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
+        </button>
+      )}
       </div>
       {queryData.Avance ? (
         <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
@@ -166,17 +188,18 @@ const CrearAvances = () => {
               >
                 Descripción:
               </label>
-              <input
+              <textarea
                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-desc"
                 type="text"
+                defaultValue={queryData.Avance ? queryData.Avance.descripcion: null}
                 name="descripcion"
                 {...register("descripcion", {
                   required: {
                     value: true,
                     message: "Campo requerido",
                   },
-                  // disabled: userData.rol === "LIDER",
+                  disabled: userData.rol === "LIDER",
                   pattern: {
                     value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
                     message: "Valor incorrecto",
@@ -201,12 +224,13 @@ const CrearAvances = () => {
                 >
                   Observaciones:
                 </label>
-                <input
+                <textarea
                   className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                   id="grid-obs"
                   type="text"
                   placeholder="Observaciones del lider"
                   name="observaciones"
+                  defaultValue={queryData.Avance ? queryData.Avance.observaciones: null}
                   {...register("observaciones", {
                     required: {
                       value: false,
@@ -214,7 +238,7 @@ const CrearAvances = () => {
                     },
                     disabled: userData.rol === "ESTUDIANTE",
                     pattern: {
-                      value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
+                      value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,500}$/i,
                       message: "Valor incorrecto",
                     },
                   })}

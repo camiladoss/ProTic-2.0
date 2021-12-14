@@ -39,4 +39,13 @@ const CREAR_INSCRIPCION = gql`
   }
 `;
 
-export { EDITAR_INSCRIPCION, CREAR_INSCRIPCION };
+const FECHA_EGRESO = gql`
+  mutation FechaEgreso($idProyecto: String!) {
+    fechaEgreso(idProyecto: $idProyecto) {
+      _id
+    }
+  }
+`;
+
+
+export { EDITAR_INSCRIPCION, CREAR_INSCRIPCION, FECHA_EGRESO};

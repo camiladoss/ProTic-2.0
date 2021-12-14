@@ -5,13 +5,16 @@ import { GET_PROYECTO } from "graphql/proyectos/queries";
 import { toast } from "react-toastify";
 import { CREAR_PROYECTO, EDITAR_PROYECTO } from "graphql/proyectos/mutations";
 import { GET_LIDERES } from "graphql/usuarios/queries";
+import { FECHA_EGRESO } from "graphql/inscripciones/mutations";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import PrivateRoute from "components/PrivateRoute";
-import moment from 'moment';
+import moment from "moment";
+import { useUser } from "context/userContext";
 
 const CrearProyecto = () => {
   const navigate = useNavigate();
+  const { userData } = useUser();
   const {
     register,
     formState: { errors },
@@ -21,9 +24,9 @@ const CrearProyecto = () => {
   } = useForm({ mode: "onBlur" });
   const { _id } = useParams();
   const [obj, setObj] = useState([]);
-  const [objetivos, setObjetivos ]= useState([]);
-  const [fechaInit, setFechaInit] = useState();
-  const [fechaFin, setFechaFin] = useState();
+  const [objetivos, setObjetivos] = useState([]);
+  // const [fechaInit, setFechaInit] = useState();
+  // const [fechaFin, setFechaFin] = useState();
   var listaOptions = [];
 
   const {
@@ -44,23 +47,31 @@ const CrearProyecto = () => {
   });
 
   const [editarProyecto, { error: mutationError }] =
-  useMutation(EDITAR_PROYECTO);
+    useMutation(EDITAR_PROYECTO);
 
   const [crearProyecto, { error: mutationCreateError }] =
-  useMutation(CREAR_PROYECTO);
+    useMutation(CREAR_PROYECTO);
 
+  const [fechaEgreso, { error: mutationInscripcionError }] =
+    useMutation(FECHA_EGRESO);
 
   useEffect(() => {
     console.log("Data servidor", queryData);
-    if(queryData){
-      setObjetivos(queryData.Proyecto.objetivos.map((o)=>{
-        return {descripcion: o.descripcion}
-      }))
+    if (queryData) {
+      setObjetivos(
+        queryData.Proyecto.objetivos.map((o) => {
+          return { descripcion: o.descripcion };
+        })
+      );
     }
-    if (queryData){
-      setFechaInit(moment(queryData.Proyecto.fechaInicio).utc().format('YYYY-MM-DD'));
-      setFechaFin(moment(queryData.Proyecto.fechaFin).utc().format('YYYY-MM-DD'));
-    }
+    // if (queryData.Proyecto) {
+    //   setFechaInit(
+    //     moment(queryData.Proyecto.fechaInicio).utc().format("YYYY-MM-DD")
+    //   );
+    //   setFechaFin(
+    //     moment(queryData.Proyecto.fechaFin).utc().format("YYYY-MM-DD")
+    //   );
+    // }
   }, [queryData]);
 
   useEffect(() => {
@@ -95,17 +106,17 @@ const CrearProyecto = () => {
 
   useEffect(() => {
     console.log(objetivos);
-    setObj('')
-  },[objetivos])
+    setObj("");
+  }, [objetivos]);
 
-  const agregarObjetivos = () =>{
+  const agregarObjetivos = () => {
     var item = {
-      'descripcion':obj,
-      };
-      setObjetivos([...objetivos, item]);
-  }
+      descripcion: obj,
+    };
+    setObjetivos([...objetivos, item]);
+  };
 
-  const deleteItem =(i)=>{
+  const deleteItem = (i) => {
     var index = i;
     objetivos.splice(index, 1);
     setObjetivos([...objetivos]);
@@ -113,20 +124,61 @@ const CrearProyecto = () => {
 
   useEffect(() => {
     console.log(obj);
-  },[obj])
+  }, [obj]);
 
   const onSubmit = (data) => {
     console.log(data);
-    if(_id){
-      editarProyecto({
-        variables: { _id, nombre:data.nombre, presupuesto:data.presupuesto, estado:data.estado, objetivos:objetivos, fase: data.fase, lider:data.lider._id, objetivoGeneral:data.objetivoGeneral, fechaInicio:fechaInit, fechaFin:fechaFin },
-      })
-      toast.success("Proyecto editado con exito");
-      navigate("/GestionProyectos");
-    }else{
+    if (_id) {
+      if(queryData.Proyecto.fase=== "TERMINADO"){
+        toast.error("El proyecto está terminado");
+      }else{
+        if (data.fase === "NULO" && data.estado === "ACTIVO") {
+          editarProyecto({
+            variables: {
+              _id,
+              estado: data.estado,
+              fase: "INICIADO",
+              fechaInicio: Date.now(),
+            },
+          });
+        } else if (data.fase === "TERMINADO" && data.estado === "ACTIVO") {
+          editarProyecto({
+            variables: {
+              _id,
+              estado: "INACTIVO",
+              fase: data.fase,
+              fechaFin: Date.now(),
+            },
+          });
+        } else {
+          editarProyecto({
+            variables: {
+              _id,
+              nombre: data.nombre,
+              presupuesto: data.presupuesto,
+              estado: data.estado,
+              objetivos: objetivos,
+              fase: data.fase,
+              lider: data.lider._id,
+              objetivoGeneral: data.objetivoGeneral,
+            },
+          });
+        }
+        if (data.estado === "INACTIVO" || data.fase === "TERMINADO") {
+          fechaEgreso({
+            variables: {
+              idProyecto: _id,
+            },
+          });
+          console.log(data.estado);
+        }
+        toast.success("Proyecto editado con exito");
+        navigate("/GestionProyectos");
+      }
+    } else {
       console.log(data);
       crearProyecto({
-        variables: { _id,objetivos:objetivos, ...data },
+        variables: { _id, objetivos: objetivos, ...data },
       });
       toast.success("Proyecto editado con exito");
       navigate("/GestionProyectos");
@@ -233,12 +285,13 @@ const CrearProyecto = () => {
               Fecha de inicio:
             </label>
             <input
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-initDate"
-              type="date"
+              type="text"
               placeholder="Fecha de inicio"
               name="fechaInicio"
-              defaultValue={fechaInit}
-              onChange = {(e) =>{setFechaInit(e.target.value)}}
+              defaultValue={queryData ?  moment(queryData.Proyecto.fechaInicio).utc().format("YYYY-MM-DD") : null}
+              disabled
             />
           </div>
           <div className="w-full md:mb-0 flex flex-col">
@@ -249,12 +302,13 @@ const CrearProyecto = () => {
               Fecha de terminación:
             </label>
             <input
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-FinDate"
-              type="date"
+              type="text"
               placeholder="Fecha de terminación"
               name="fechaFin"
-              defaultValue={fechaFin}
-              onChange = {(e) =>{setFechaFin(e.target.value)}}
+              defaultValue={queryData ? moment(queryData.Proyecto.fechaFin).utc().format("YYYY-MM-DD") : null}
+              disabled
             />
           </div>
           {_id ? (
@@ -275,6 +329,7 @@ const CrearProyecto = () => {
                     options={options}
                     value={options.find((c) => c.value === value)}
                     onChange={(val) => onChange(val.value)}
+                    isDisabled={userData.rol === "LIDER"}
                   />
                 )}
               />
@@ -298,12 +353,13 @@ const CrearProyecto = () => {
                     options={options2}
                     value={options2.find((c) => c.value === value)}
                     onChange={(val) => onChange(val.value)}
+                    isDisabled={userData.rol === "LIDER"}
                   />
                 )}
               />
             </div>
           ) : null}
-          {dataEstudiante ? (
+          {dataEstudiante && !_id ? (
             <div className="w-full mb-6 md:mb-0">
               <label
                 className="text-gray-700 text-md font-bold"
@@ -317,12 +373,30 @@ const CrearProyecto = () => {
                 name="lider"
                 render={({ field: { onChange, value } }) => (
                   <Select
-                    // defaultValue={options3.find(c => c.value === queryData.Usuario.estado)}
                     options={estudianteOpciones}
                     value={estudianteOpciones.find((c) => c.value === value)}
                     onChange={(val) => onChange(val.value)}
                   />
                 )}
+              />
+            </div>
+          ) : null}
+          {queryData ? (
+            <div className="w-full md:mb-0 flex flex-col">
+              <label
+                className="text-gray-700 text-md font-bold"
+                htmlFor="grid-FinDate"
+              >
+                Lider:
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                defaultValue={
+                  queryData.Proyecto.lider.nombre +
+                  " " +
+                  queryData.Proyecto.lider.apellido
+                }
+                disabled
               />
             </div>
           ) : null}
@@ -373,19 +447,25 @@ const CrearProyecto = () => {
                 type="text"
                 placeholder="Objetivo Especifico"
                 name="objetivoGeneral"
-                onChange = {(e) =>{setObj(e.target.value)}}
+                onChange={(e) => {
+                  setObj(e.target.value);
+                }}
               />
               <button
                 className="px-2 py-1 ml-2 mt-1 max-h-8  text-white bg-blue-400 rounded fas fa-plus"
-                type='button'
-                onClick={() => {agregarObjetivos()}}
+                type="button"
+                onClick={() => {
+                  agregarObjetivos();
+                }}
               ></button>
             </div>
           </div>
           <table className="border-b border-blue-300 shadow">
             <thead className="bg-maximunBlue">
               <tr>
-                <th className="px-6 py-2 text-md text-gray-700">Objetivos Especificos</th>
+                <th className="px-6 py-2 text-md text-gray-700">
+                  Objetivos Especificos
+                </th>
                 <th className="px-6 py-2 text-md text-gray-700">Eliminar</th>
               </tr>
             </thead>
@@ -394,14 +474,19 @@ const CrearProyecto = () => {
                 objetivos.map((p, i) => {
                   return (
                     <tr key={i} className="whitespace-nowrap">
-                      <td key={i + 'td1'} className="px-6 py-4 text-md text-gray-600">
+                      <td
+                        key={i + "td1"}
+                        className="px-6 py-4 text-md text-gray-600"
+                      >
                         {p.descripcion}
                       </td>
                       <td className=" text-md text-center text-gray-600">
                         <button
                           className="px-4 py-1 text-md text-white bg-red-400 rounded fas fa-trash-alt"
                           type="button"
-                          onClick={() => {deleteItem(i)}}
+                          onClick={() => {
+                            deleteItem(i);
+                          }}
                         ></button>
                       </td>
                     </tr>

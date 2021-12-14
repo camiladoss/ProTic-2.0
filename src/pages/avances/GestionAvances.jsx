@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_FILTRARAVANCES } from "graphql/avances/queries";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { GET_PROYECTO } from "graphql/proyectos/queries";
 import PrivateComponent from "components/PrivateComponent";
 
 const GestionAvances = () => {
@@ -13,7 +14,14 @@ const GestionAvances = () => {
     console.log(_id);
   }, [_id]);
 
-  const { data, error, loading } = useQuery(GET_FILTRARAVANCES, {variables:{_id},  fetchPolicy: "no-cache"});
+  const { data:querydata, loading:loadingData } = useQuery(GET_PROYECTO, {
+    variables: { _id },
+  });
+
+  const { data, error, loading } = useQuery(GET_FILTRARAVANCES, {
+    variables: { _id },
+    fetchPolicy: "no-cache",
+  });
 
   useEffect(() => {
     console.log(data);
@@ -25,7 +33,7 @@ const GestionAvances = () => {
     }
   });
 
-  if (loading) {
+  if (loading && loadingData) {
     return <div>Cargando...</div>;
   }
 
@@ -38,15 +46,20 @@ const GestionAvances = () => {
             <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
           </Link>
         </div>
-        <div className="">
-          <PrivateComponent roleList={["ESTUDIANTE", "AUTORIZADO"]}>
-            <button
-              className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
-              onClick={() => {navigate(`/GestionAvances/CrearAvances/${_id}`)}}>
-                  Nuevo Avance
-            </button>
-          </PrivateComponent>
-        </div>
+        {querydata !== undefined && querydata.Proyecto.estado !== "INACTIVO" && querydata.Proyecto.fase !== "TERMINADO" ? (
+            <PrivateComponent roleList={["ESTUDIANTE", "AUTORIZADO"]}>
+              <button
+                className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+                onClick={() => {
+                  navigate(`/GestionAvances/CrearAvances/${_id}`);
+                }}
+              >
+                Nuevo Avance
+              </button>
+            </PrivateComponent>
+        ) : (
+          null
+        )}
       </div>
       <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">Avances</h2>
       <input
@@ -74,18 +87,21 @@ const GestionAvances = () => {
                   <td className="px-6 py-4 text-md text-gray-600">
                     {a.descripcion}
                   </td>
-                  <td className="px-6 py-4 text-md text-gray-600">{a.creadoPor.nombre}{" "}{a.creadoPor.apellido}</td>
+                  <td className="px-6 py-4 text-md text-gray-600">
+                    {a.creadoPor.nombre} {a.creadoPor.apellido}
+                  </td>
                   <td className="px-6 py-4 text-md text-gray-600">{a.fecha}</td>
                   <td className="px-6 py-4 text-md text-gray-600">
-                    <button
-                      onClick={() => {
-                        navigate(
-                          `/GestionAvances/EditarAvances/${a._id}`
-                        );
-                      }}
-                      className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
-                      to="/Historial"
-                    ></button>
+                    {a.proyecto.estado === "INACTIVO" ||
+                    a.proyecto.fase === "TERMINADO" ? null : (
+                      <button
+                        onClick={() => {
+                          navigate(`/GestionAvances/EditarAvances/${a._id}`);
+                        }}
+                        className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
+                        to="/Historial"
+                      ></button>
+                    )}
                   </td>
                 </tr>
               );

@@ -103,9 +103,9 @@ const GestionProyectos = () => {
                     roleList={["ESTUDIANTE", "ADMINISTRADOR", "AUTORIZADO"]}
                   >
                     <td className="px-6 py-4 text-md text-gray-600">
-                      {p.inscripciones
-                        .map((i) => i.estudiante._id)
-                        .includes(obj) ? null : (
+                      {(p.estado === "INACTIVO" || p.fase === 'TERMINADO') || p.inscripciones.map((i) => i.estudiante._id).includes(obj)
+                      /* && p.inscripciones.fechaEgreso === null) */
+                     ? null : (
                         <PrivateComponent
                           roleList={["ESTUDIANTE", "AUTORIZADO"]}
                         >

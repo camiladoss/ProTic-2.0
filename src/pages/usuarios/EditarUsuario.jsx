@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_USUARIO, GET_ESTUDIANTES } from "graphql/usuarios/queries";
+import { GET_USUARIO } from "graphql/usuarios/queries";
 import { toast } from "react-toastify";
 import { EDITAR_USUARIO } from "graphql/usuarios/mutations";
 import { Controller, useForm } from "react-hook-form";
 import PrivateRoute from "components/PrivateRoute";
 import Select from "react-select";
+import { useUser } from "context/userContext";
 
 const EditarUsuario = () => {
+  const { userData } = useUser();
   const navigate = useNavigate();
   const {
     register,
@@ -19,11 +21,6 @@ const EditarUsuario = () => {
   } = useForm({ mode: "onBlur" });
   const { _id } = useParams();
 
-  const {
-    data: dataEstudiante,
-    error: errorEstudiante,
-    loading: LoadingEstudiante,
-  } = useQuery(GET_ESTUDIANTES, { fetchPolicy: "no-cache" });
   const {
     data: queryData,
     error: queryError,
@@ -39,14 +36,13 @@ const EditarUsuario = () => {
 
   useEffect(() => {
     console.log("Data servidor", queryData);
-    console.log("Data servidor2", dataEstudiante);
-  }, [queryData, dataEstudiante]);
+  }, [queryData]);
 
   useEffect(() => {
     if (queryError) {
       toast.error("Error consultado usuarios");
     }
-    if (mutationError || errorEstudiante) {
+    if (mutationError) {
       toast.error("Error modificado el usuario");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,8 +66,12 @@ const EditarUsuario = () => {
     { value: "LIDER", label: "LIDER" },
     { value: "ADMINISTRADOR", label: "ADMINISTRADOR" },
   ];
+  const options3 = [
+    { value: "AUTORIZADO", label: "AUTORIZADO" },
+    { value: "PENDIENTE", label: "PENDIENTE" },
+  ];
 
-  if (queryLoading || LoadingEstudiante) {
+  if (queryLoading) {
     return <div>Cargando...</div>;
   }
 
@@ -273,7 +273,7 @@ const EditarUsuario = () => {
                 />
               </div>
             ) : null}
-            {queryData ? (
+            {userData && userData.rol === "ADMINISTRADOR" ? (
               <div className="w-full mb-6 md:mb-0">
                 <label
                   className="text-gray-700 text-md font-bold"
@@ -289,6 +289,28 @@ const EditarUsuario = () => {
                     <Select
                       options={options}
                       value={options.find((c) => c.value === value)}
+                      onChange={(val) => onChange(val.value)}
+                    />
+                  )}
+                />
+              </div>
+            ) : null}
+            {userData && userData.rol === "LIDER" ? (
+              <div className="w-full mb-6 md:mb-0">
+                <label
+                  className="text-gray-700 text-md font-bold"
+                  htmlFor="grid-estado"
+                >
+                  Estado:
+                </label>
+                <Controller
+                  id="grid-estado"
+                  control={control}
+                  name="estado"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      options={options3}
+                      value={options3.find((c) => c.value === value)}
                       onChange={(val) => onChange(val.value)}
                     />
                   )}

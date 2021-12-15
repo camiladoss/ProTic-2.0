@@ -71,7 +71,6 @@ const CrearInscripcion = () => {
           <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
         </button>
       </div>
-
       <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
         Inscripción a proyectos
       </h2>
@@ -91,9 +90,8 @@ const CrearInscripcion = () => {
                 type="text"
                 defaultValue={queryData.Inscripcion.proyecto.nombre}
                 placeholder="Nombre del proyecto"
-                name="nombreProyecto"
+                name="nombre"
                 disabled
-                register
               />
             </div>
             <div className="w-full md:mb-0 flex flex-col">
@@ -142,9 +140,9 @@ const CrearInscripcion = () => {
                 id="grid-objG"
                 type="text"
                 placeholder="ID de la inscripción"
-                defaultValue={queryData.Inscripcion._id}
-                name="idInscripcion"
+                name="_id"
                 disabled
+                {...register("_id")}
               />
             </div>
             <div className="w-full md:mb-0 flex flex-col">
@@ -157,23 +155,12 @@ const CrearInscripcion = () => {
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 type="text"
-                placeholder="Fecha de ingreso"
+                defaultValue={queryData.Inscripcion.fechaIngreso}
                 name="fechaIngreso"
                 id="dateIn"
                 disabled
-                {...register("fechaIngreso", {
-                required: {
-                  value: true,
-                  message: "El campo es requerido",
-                },
-                pattern: {
-                  value: /^[a-zA-ZÀ-ÿ\s-Z0-9_.+-,]{4,100}$/i,
-                  message: "El valor no es correcto",
-                },
-              })}
               />
             </div>
-
             <div className="w-full md:mb-0 flex flex-col">
               <label
                 className="text-gray-700 text-md font-bold"
@@ -184,7 +171,6 @@ const CrearInscripcion = () => {
               <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 type="text"
-                placeholder="Fecha de Egreso "
                 defaultValue={queryData.Inscripcion.fechaEgreso}
                 name="fechaEgreso"
                 id="dateEg"

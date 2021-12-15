@@ -12,7 +12,7 @@ const GET_PROYECTOS = gql`
         apellido
       }
       inscripciones {
-        fechaEgreso
+        _id
         estudiante {
           _id
         }

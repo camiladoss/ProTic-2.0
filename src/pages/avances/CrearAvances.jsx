@@ -152,9 +152,10 @@ const CrearAvances = () => {
                   Fecha de Avance:
                 </label>
                 <input
-                  type="date"
-                  value="2013-01-31"
-                  id="grid-Date-avance"
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  defaultValue={queryData.Avance.fecha}
+                  name="fecha"
                   disabled
                 />
               </div>

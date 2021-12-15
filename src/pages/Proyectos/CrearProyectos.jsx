@@ -178,7 +178,7 @@ const CrearProyecto = () => {
     } else {
       console.log(data);
       crearProyecto({
-        variables: { _id, objetivos: objetivos, ...data },
+        variables: { _id, objetivos: objetivos, fechaInicio:null, fechaFin:null, ...data },
       });
       toast.success("Proyecto editado con exito");
       navigate("/GestionProyectos");

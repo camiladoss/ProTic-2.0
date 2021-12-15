@@ -1,16 +1,21 @@
 import React, { useEffect } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_MIS_PROYECTOS } from "graphql/proyectos/queries";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PrivateComponent from "components/PrivateComponent";
 import { useUser } from "context/userContext";
+// import { ACCESO_ESTUDIANTE } from "graphql/inscripciones/queries";
 
 const MisProyectos = () => {
   const navigate = useNavigate();
   const { data, error, loading } = useQuery(GET_MIS_PROYECTOS, {
     fetchPolicy: "no-cache",
   });
+
+  // const [getAccess, { called, queryLoading, queryData }] = useLazyQuery(ACCESO_ESTUDIANTE, {
+  // });
+
   const { userData } = useUser();
 
   useEffect(() => {
@@ -19,12 +24,6 @@ const MisProyectos = () => {
 
   useEffect(() => {
     if (error) toast.error("Error consultado proyectos");
-  }, [error]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error("Error consultado usuarios");
-    }
   }, [error]);
 
   if (loading) {

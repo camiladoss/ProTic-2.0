@@ -48,7 +48,18 @@ const GET_FILTRARESTUDIANTE = gql`
       _id
     }
   }
-`
+`;
+const ACCESO_ESTUDIANTE = gql`
+  query FiltroEstudiante($_id: String!) {
+    FiltroEstudiante(_id: $_id) {
+      _id
+    }
+  }
+`;
 
-
-export { GET_INSCRIPCION, GET_FILTRARINSCRIPCION, GET_FILTRARESTUDIANTE };
+export {
+  GET_INSCRIPCION,
+  GET_FILTRARINSCRIPCION,
+  GET_FILTRARESTUDIANTE,
+  ACCESO_ESTUDIANTE,
+};

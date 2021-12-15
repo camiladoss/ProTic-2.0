@@ -51,6 +51,11 @@ const GET_MIS_PROYECTOS = gql`
       presupuesto
       estado
       fase
+      inscripciones {
+        estado
+        _id
+        fechaIngreso
+      }
     }
   }
 `;

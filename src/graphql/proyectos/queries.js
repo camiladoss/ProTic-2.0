@@ -12,7 +12,7 @@ const GET_PROYECTOS = gql`
         apellido
       }
       inscripciones {
-        fechaEgreso
+        _id
         estudiante {
           _id
         }
@@ -51,6 +51,11 @@ const GET_MIS_PROYECTOS = gql`
       presupuesto
       estado
       fase
+      inscripciones {
+        estado
+        _id
+        fechaIngreso
+      }
     }
   }
 `;

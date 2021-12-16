@@ -31,18 +31,17 @@ const CrearAvances = () => {
     onCompleted: (data) => reset(data.Avance),
   });
 
-  const {
-    data: proyectoData,
-    error: proyectoError,
-  } = useQuery(GET_PROYECTO, {
+  const { data: proyectoData, error: proyectoError } = useQuery(GET_PROYECTO, {
     variables: { _id },
   });
 
   const [editarAvance, { error: mutationError }] = useMutation(EDITAR_AVANCE);
 
-  const [crearAvance, { error: createError }] = useMutation(CREAR_AVANCE);
+  const [crearAvance, { data: mutationData, error: createError }] =
+    useMutation(CREAR_AVANCE);
 
-  const [editarProyecto, { error: proyecError }] = useMutation(EDITAR_PROYECTO);
+  const [editarProyecto, { error: proyecError }] =
+    useMutation(EDITAR_PROYECTO);
 
   useEffect(() => {
     console.log("Data servidor", queryData);
@@ -57,6 +56,26 @@ const CrearAvances = () => {
     }
   }, [queryError, mutationError]);
 
+  useEffect(() => {
+    if (mutationData) {
+      console.log(mutationData);
+      if (mutationData.crearAvance === null) {
+        toast.error("No tienes permisos");
+        console.log(mutationData);
+      } else if (mutationData.crearAvance !== null) {
+        if (proyectoData.Proyecto.fase === "INICIADO") {
+          editarProyecto({
+            variables: { _id, fase: "DESARROLLO" },
+          });
+        }
+        toast.success("Avance creado con éxito");
+        navigate(`/GestionAvances/${_id}`);
+        console.log(mutationData.crearInscripcion);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutationData]);
+
   const onSubmit = (data) => {
     if (queryData.Avance) {
       editarAvance({
@@ -68,13 +87,9 @@ const CrearAvances = () => {
       crearAvance({
         variables: { proyecto: _id, creadoPor: userData._id, ...data },
       });
-      if(proyectoData.Proyecto.fase === "INICIADO"){
-        editarProyecto({
-          variables: { _id, fase: "DESARROLLO"},
-        })
-      }
-      toast.success("Avance creado con exito");
-      navigate(`/GestionAvances/${_id}`);
+
+      // toast.success("Avance creado con exito");
+      // navigate(`/GestionAvances/${_id}`);
     }
   };
 
@@ -85,15 +100,19 @@ const CrearAvances = () => {
   return (
     <div className="flex flex-col items-center w-9/12 m-auto">
       <div className="flex self-start">
-      {queryData.Avance?(
-        <button onClick={()=>navigate(`/GestionAvances/${queryData.Avance.proyecto._id}`)}>
-          <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
-        </button>
-      ):(
-        <button onClick={()=>navigate(`/GestionAvances/${_id}`)}>
-          <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
-        </button>
-      )}
+        {queryData.Avance ? (
+          <button
+            onClick={() =>
+              navigate(`/GestionAvances/${queryData.Avance.proyecto._id}`)
+            }
+          >
+            <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
+          </button>
+        ) : (
+          <button onClick={() => navigate(`/GestionAvances/${_id}`)}>
+            <i className="fas fa-arrow-circle-left text-3xl p-4 text-indigoDye "></i>
+          </button>
+        )}
       </div>
       {queryData.Avance ? (
         <h2 className="font-bold text-2xl mb-4 text-gray-700 flex">
@@ -152,9 +171,10 @@ const CrearAvances = () => {
                   Fecha de Avance:
                 </label>
                 <input
-                  type="date"
-                  value="2013-01-31"
-                  id="grid-Date-avance"
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  type="text"
+                  defaultValue={queryData.Avance.fecha}
+                  name="fecha"
                   disabled
                 />
               </div>
@@ -192,7 +212,9 @@ const CrearAvances = () => {
                 className="appearance-none w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-desc"
                 type="text"
-                defaultValue={queryData.Avance ? queryData.Avance.descripcion: null}
+                defaultValue={
+                  queryData.Avance ? queryData.Avance.descripcion : null
+                }
                 name="descripcion"
                 {...register("descripcion", {
                   required: {
@@ -230,7 +252,9 @@ const CrearAvances = () => {
                   type="text"
                   placeholder="Observaciones del lider"
                   name="observaciones"
-                  defaultValue={queryData.Avance ? queryData.Avance.observaciones: null}
+                  defaultValue={
+                    queryData.Avance ? queryData.Avance.observaciones : null
+                  }
                   {...register("observaciones", {
                     required: {
                       value: false,
@@ -247,22 +271,22 @@ const CrearAvances = () => {
             ) : null}
             {queryData.Avance ? (
               <div className="md:col-start-1 md:col-end-3 flex justify-center">
-              <button
-                className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
-                type="submit"
-              >
-                Editar
-              </button>
-            </div>
+                <button
+                  className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+                  type="submit"
+                >
+                  Editar
+                </button>
+              </div>
             ) : (
               <div className="md:col-start-1 md:col-end-3 flex justify-center">
-              <button
-                className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
-                type="submit"
-              >
-                Crear
-              </button>
-            </div>
+                <button
+                  className="shadow bg-indigoDye hover:bg-carolinaBlue focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 m-4 rounded"
+                  type="submit"
+                >
+                  Crear
+                </button>
+              </div>
             )}
           </div>
         </form>

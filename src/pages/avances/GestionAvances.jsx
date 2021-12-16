@@ -5,6 +5,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GET_PROYECTO } from "graphql/proyectos/queries";
 import PrivateComponent from "components/PrivateComponent";
+import { ACCESO_ESTUDIANTE } from "graphql/inscripciones/queries";
 
 const GestionAvances = () => {
   const navigate = useNavigate();
@@ -23,6 +24,10 @@ const GestionAvances = () => {
     fetchPolicy: "no-cache",
   });
 
+  const { data: queryData, loading:queryLoading } = useQuery(ACCESO_ESTUDIANTE,{
+    variables: { _id },
+  });
+
   useEffect(() => {
     console.log(data);
   }, [data]);
@@ -33,7 +38,11 @@ const GestionAvances = () => {
     }
   });
 
-  if (loading && loadingData) {
+  useEffect(() => {
+    console.log("Data servidor", queryData);
+  }, [queryData]);
+
+  if (loading && loadingData && queryLoading) {
     return <div>Cargando...</div>;
   }
 
@@ -95,8 +104,7 @@ const GestionAvances = () => {
                     {a.proyecto.estado === "INACTIVO" ||
                     a.proyecto.fase === "TERMINADO" ? null : (
                       <button
-                        onClick={() => {
-                          navigate(`/GestionAvances/EditarAvances/${a._id}`);
+                        onClick={() => {if (queryData.FiltroEstudiante.length){  navigate(`/GestionAvances/EditarAvances/${a._id}`); }else{           toast.error("Error consultado inscripciones")}
                         }}
                         className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
                         to="/Historial"

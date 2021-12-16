@@ -40,7 +40,7 @@ const CrearAvances = () => {
   const [crearAvance, { data: mutationData, error: createError }] =
     useMutation(CREAR_AVANCE);
 
-  const [editarProyecto, { data: mutationDataEdit, error: proyecError }] =
+  const [editarProyecto, { error: proyecError }] =
     useMutation(EDITAR_PROYECTO);
 
   useEffect(() => {
@@ -63,6 +63,11 @@ const CrearAvances = () => {
         toast.error("No tienes permisos");
         console.log(mutationData);
       } else if (mutationData.crearAvance !== null) {
+        if (proyectoData.Proyecto.fase === "INICIADO") {
+          editarProyecto({
+            variables: { _id, fase: "DESARROLLO" },
+          });
+        }
         toast.success("Avance creado con éxito");
         navigate(`/GestionAvances/${_id}`);
         console.log(mutationData.crearInscripcion);
@@ -70,21 +75,6 @@ const CrearAvances = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mutationData]);
-
-  useEffect(() => {
-    if (mutationDataEdit) {
-      console.log(mutationDataEdit);
-      if (mutationDataEdit.editarAvance === null) {
-        toast.error("No tienes permisos ");
-        console.log(mutationDataEdit);
-      } else if (mutationDataEdit.editarAvance !== null) {
-        toast.success("Avance creado con éxito");
-        navigate(`/GestionAvances/${_id}`);
-        console.log(mutationDataEdit.crearInscripcion);
-      }
-    }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mutationDataEdit]);
 
   const onSubmit = (data) => {
     if (queryData.Avance) {
@@ -97,11 +87,7 @@ const CrearAvances = () => {
       crearAvance({
         variables: { proyecto: _id, creadoPor: userData._id, ...data },
       });
-      if (proyectoData.Proyecto.fase === "INICIADO") {
-        editarProyecto({
-          variables: { _id, fase: "DESARROLLO" },
-        });
-      }
+
       // toast.success("Avance creado con exito");
       // navigate(`/GestionAvances/${_id}`);
     }

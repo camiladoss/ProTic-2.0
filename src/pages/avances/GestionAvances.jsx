@@ -6,10 +6,12 @@ import { toast } from "react-toastify";
 import { GET_PROYECTO } from "graphql/proyectos/queries";
 import PrivateComponent from "components/PrivateComponent";
 import { ACCESO_ESTUDIANTE } from "graphql/inscripciones/queries";
+import { useUser } from "context/userContext";
 
 const GestionAvances = () => {
   const navigate = useNavigate();
   const { _id } = useParams();
+  const { userData } = useUser();
 
   useEffect(() => {
     console.log(_id);
@@ -104,7 +106,7 @@ const GestionAvances = () => {
                     {a.proyecto.estado === "INACTIVO" ||
                     a.proyecto.fase === "TERMINADO" ? null : (
                       <button
-                        onClick={() => {if (queryData.FiltroEstudiante.length){  navigate(`/GestionAvances/EditarAvances/${a._id}`); }else{           toast.error("Error consultado inscripciones")}
+                        onClick={() => {if (queryData.FiltroEstudiante.length || userData.rol === 'LIDER'){  navigate(`/GestionAvances/EditarAvances/${a._id}`); }else{           toast.error("Error consultado inscripciones")}
                         }}
                         className="px-4 py-1 text-md mr-2 text-white bg-green-400 rounded fas fa-pen"
                         to="/Historial"

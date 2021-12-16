@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import anuser from "../assets/anuser.png";
 import { useUser } from "context/userContext";
-import { EDITAR_PERFIL } from "../graphql/usuarios/mutations";
+import { EDITAR_PERFIL, EDITAR_USUARIO } from "../graphql/usuarios/mutations";
 import { GET_USUARIO } from "../graphql/usuarios/queries";
 import { toast } from "react-toastify";
 import { useQuery, useMutation } from "@apollo/client";
@@ -17,7 +17,6 @@ const Perfil = () => {
     handleSubmit,
     reset,
   } = useForm({ mode: "onBlur" });
- 
 
   useEffect(() => {
     console.log(userData);
@@ -34,6 +33,7 @@ const Perfil = () => {
   });
 
   const [editarPerfil, { error: mutationError }] = useMutation(EDITAR_PERFIL);
+  const [editarUsuario, { error: mutaError }] = useMutation(EDITAR_USUARIO);
 
   useEffect(() => {
     console.log("Data servidor", queryData);
@@ -49,11 +49,17 @@ const Perfil = () => {
   }, [queryError, mutationError]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    editarPerfil({
-      variables: { _id: userData._id, ...data },
-    });
-    toast.success("Usuario modificado con exito");
+    if(data.password === ''){
+      editarUsuario({
+        variables: { _id: userData._id, ...data},
+      });
+      toast.success("Usuario modificado con exito");
+    }else{
+      editarPerfil({
+        variables: { _id: userData._id, ...data },
+      });
+      toast.success("Usuario modificado con exito");
+    }
   };
 
   if (queryLoading) {
@@ -91,7 +97,7 @@ const Perfil = () => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="username"
           >
-            Usuario
+            Nombre
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -118,7 +124,38 @@ const Perfil = () => {
             </span>
           )}
         </div>
-
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="username"
+          >
+            Apellido
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="username"
+            type="text"
+            name="apellido"
+            {...register("apellido", {
+              required: {
+                value: true,
+                massage: "El campo es requerido",
+              },
+              pattern: {
+                value: /^[A-Za-z]+$/i,
+                massage: "El valor no es correcto",
+              },
+            })}
+          />
+          {errors.nombre?.type === "required" && (
+            <span className="text-red-600">"El nombre es requerido!"</span>
+          )}
+          {errors.nombre?.type === "pattern" && (
+            <span className="text-red-600">
+              "El nombre solo puede llevar letras!"
+            </span>
+          )}
+        </div>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
